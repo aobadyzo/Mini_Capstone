@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>History - Audit Logs</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="History.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <span class="material-icons">inventory_2</span>
+                </div>
+                <span>Inventory</span>
+            </div>
+            
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">dashboard</span>
+                </div>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">person</span>
+                </div>
+                <span>User</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">shopping_cart</span>
+                </div>
+                <span>Orders</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">analytics</span>
+                </div>
+                <span>Analytics</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">inventory</span>
+                </div>
+                <span>Inventory</span>
+            </div>
+            <div class="nav-item active">
+                <div class="nav-icon">
+                    <span class="material-icons">history</span>
+                </div>
+                <span>History</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">settings</span>
+                </div>
+                <span>Settings</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">logout</span>
+                </div>
+                <span>Logout</span>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="history-card">
+                <div class="header">
+                    <h1>History Logs</h1>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search logs..." id="searchInput">
+                        <div class="search-icon"></div>
+                    </div>
+                </div>
+                
+                <div class="tabs-container">
+                    <div class="tab active">Audit Logs</div>
+                    <div class="tab">Transaction Logs</div>
+                    <div class="tab">Inventory Logs</div>
+                </div>
+                
+                <div class="table-container">
+                    <div class="divider-bar"></div>
+                    
+                    <div class="table-header" id="tableHeader">
+                        <div>LOG ID</div>
+                        <div>PERFORMED BY</div>
+                        <div>ACTION TYPE</div>
+                        <div>DATE PERFORMED</div>
+                    </div>
+                    
+                    <div id="contentArea">
+                        <!-- Audit Logs Content -->
+                        <div class="content-section active" id="auditContent">
+                            <div class="table-row">
+                                <div>AUD-001</div>
+                                <div>John Smith</div>
+                                <div><span class="action-type action-add">Add Product</span></div>
+                                <div>11-02-2025 10:30 AM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>AUD-002</div>
+                                <div>Sarah Johnson</div>
+                                <div><span class="action-type action-update">Stock Update</span></div>
+                                <div>11-02-2025 09:15 AM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>AUD-003</div>
+                                <div>Mike Chen</div>
+                                <div><span class="action-type action-delete">Delete Item</span></div>
+                                <div>11-01-2025 04:45 PM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>AUD-004</div>
+                                <div>Emily Davis</div>
+                                <div><span class="action-type action-adjust">Stock Adjustment</span></div>
+                                <div>11-01-2025 02:20 PM</div>
+                            </div>
+                        </div>
+
+                        <!-- Transaction Logs Content -->
+                        <div class="content-section" id="transactionContent">
+                            <div class="table-row">
+                                <div>TXN-001</div>
+                                <div>ORD-2025-001</div>
+                                <div>John Smith</div>
+                                <div><span class="action-type action-add">Credit Card</span></div>
+                                <div>₱1,250.00</div>
+                                <div>11-02-2025 10:30 AM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>TXN-002</div>
+                                <div>ORD-2025-002</div>
+                                <div>Sarah Johnson</div>
+                                <div><span class="action-type action-update">GCash</span></div>
+                                <div>₱850.50</div>
+                                <div>11-02-2025 09:15 AM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>TXN-003</div>
+                                <div>ORD-2025-003</div>
+                                <div>Mike Chen</div>
+                                <div><span class="action-type action-adjust">Cash</span></div>
+                                <div>₱2,100.00</div>
+                                <div>11-01-2025 04:45 PM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>TXN-004</div>
+                                <div>ORD-2025-004</div>
+                                <div>Emily Davis</div>
+                                <div><span class="action-type action-add">PayMaya</span></div>
+                                <div>₱1,675.25</div>
+                                <div>11-01-2025 02:20 PM</div>
+                            </div>
+                        </div>
+
+                        <!-- Inventory Logs Content -->
+                        <div class="content-section" id="inventoryContent">
+                            <div class="table-row">
+                                <div>INV-LOG-001</div>
+                                <div>PROD-A-123</div>
+                                <div>BATCH-2025-001</div>
+                                <div>John Smith</div>
+                                <div><span class="action-type action-add">Stock In</span></div>
+                                <div>11-02-2025 10:30 AM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>INV-LOG-002</div>
+                                <div>PROD-B-456</div>
+                                <div>BATCH-2025-002</div>
+                                <div>Sarah Johnson</div>
+                                <div><span class="action-type action-update">Adjusted</span></div>
+                                <div>11-02-2025 09:15 AM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>INV-LOG-003</div>
+                                <div>PROD-C-789</div>
+                                <div>BATCH-2025-003</div>
+                                <div>Mike Chen</div>
+                                <div><span class="action-type action-delete">Stock Out</span></div>
+                                <div>11-01-2025 04:45 PM</div>
+                            </div>
+                            <div class="table-row">
+                                <div>INV-LOG-004</div>
+                                <div>PROD-D-321</div>
+                                <div>BATCH-2025-004</div>
+                                <div>Emily Davis</div>
+                                <div><span class="action-type action-adjust">Restocked</span></div>
+                                <div>11-01-2025 02:20 PM</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="History.js"></script>
+</body>
+</html>

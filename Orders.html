@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="globals.css" />
+    <link rel="stylesheet" href="Orders.css" />
+</head>
+<body>
+    <div class="ordes">
+        <!-- Main Content Card -->
+        <div class="inventory-product"></div>
+        
+        <!-- Divider -->
+        <div class="divider"></div>
+        
+        <!-- Order Rows Container -->
+        <div id="ordersContainer">
+            <!-- Orders will be dynamically generated here -->
+        </div>
+        
+        <!-- Table Headers -->
+        <div class="text-wrapper">Order ID</div>
+        <div class="text-wrapper-2">Customer</div>
+        <div class="text-wrapper-3">Total Items</div>
+        <div class="text-wrapper-4">Address</div>
+        <div class="text-wrapper-5">Payment</div>
+        <div class="text-wrapper-6">Status</div>
+        
+        <!-- Page Title and Icon -->
+        <div class="text-wrapper-7">Orders</div>
+        <div class="frame-3">
+            <span class="material-icons vector-5">shopping_cart</span>
+        </div>
+        
+        <!-- Search Bar -->
+        <input type="text" class="rectangle" id="searchInput" placeholder="">
+        <div class="text-wrapper-8">Search</div>
+        <div class="frame-4">
+            <span class="material-icons vector">search</span>
+        </div>
+        
+        <!-- Scroll Wheel -->
+        <div class="scroll-wheel"></div>
+        
+        <!-- Sidebar Navigation -->
+        <div class="text-wrapper-9">Dash Board</div>
+        <div class="text-wrapper-10">Settings</div>
+        <div class="text-wrapper-11">Logout</div>
+        <div class="frame-5">
+            <span class="material-icons vector-5">history</span>
+        </div>
+        <div class="text-wrapper-12">History</div>
+        <div class="text-wrapper-13">User</div>
+        <div class="text-wrapper-14">Orders</div>
+        <div class="text-wrapper-15">Analytics</div>
+        <div class="text-wrapper-16">Inventory</div>
+        
+        <!-- Sidebar Icons -->
+        <div class="frame-6">
+            <span class="material-icons vector">inventory</span>
+        </div>
+        <div class="frame-7">
+            <span class="material-icons vector-6">analytics</span>
+        </div>
+        <div class="frame-8">
+            <span class="material-icons vector-5">shopping_cart</span>
+        </div>
+        <div class="frame-9">
+            <span class="material-icons vector-7">settings</span>
+        </div>
+        <div class="frame-10">
+            <span class="material-icons vector-6">logout</span>
+        </div>
+        <div class="frame-11">
+            <span class="material-icons vector-8">person</span>
+        </div>
+        <div class="frame-12">
+            <span class="material-icons vector-9">dashboard</span>
+        </div>
+    </div>
+    
+    <!-- Modal for Order Details -->
+    <div id="orderModal" class="order-modal">
+        <div class="modal-overlay" onclick="closeOrderModal()"></div>
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeOrderModal()">&times;</button>
+            <h2 class="modal-title">Order Details</h2>
+            <div id="modalBody" class="modal-body">
+                <!-- Order details will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <script src="Orders.js"></script>
+</body>
+</html>

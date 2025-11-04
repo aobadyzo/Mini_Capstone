@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventory Management</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="Inventory.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <span class="material-icons">inventory_2</span>
+                </div>
+                <span>Inventory</span>
+            </div>
+            
+            <div class="nav-item active">
+                <div class="nav-icon">
+                    <span class="material-icons">dashboard</span>
+                </div>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">person</span>
+                </div>
+                <span>User</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">shopping_cart</span>
+                </div>
+                <span>Orders</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">analytics</span>
+                </div>
+                <span>Analytics</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">inventory</span>
+                </div>
+                <span>Inventory</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">history</span>
+                </div>
+                <span>History</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">settings</span>
+                </div>
+                <span>Settings</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">logout</span>
+                </div>
+                <span>Logout</span>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="inventory-card">
+                <div class="header">
+                    <h1 style="font-size: 30px; font-weight: 600;">Inventory Management</h1>
+                    <div class="search-container">
+                        <input type="text" class="search-input" placeholder="Search products..." id="searchInput">
+                        <div class="search-icon"></div>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <div class="divider-bar"></div>
+                    
+                    <div class="table-header">
+                        <div>NAME</div>
+                        <div>ID</div>
+                        <div>QUANTITY</div>
+                        <div>STOCK LEVEL</div>
+                        <div>EXPIRATION DATE</div>
+                        <div>DATE ADDED</div>
+                        <div></div>
+                    </div>
+                    
+                    <div id="inventoryList">
+                        <!-- Items will be dynamically added here -->
+                    </div>
+                </div>
+                
+                <div class="action-buttons" style="grid-template-columns: repeat(4, 1fr);">
+                    <div class="action-card" onclick="openAddModal()">
+                        <div class="action-card-content">
+                            <div class="action-title">ADD PRODUCT</div>
+                            <div class="action-icon">
+                                <span class="material-icons">add</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-card" onclick="openAdjustModal()">
+                        <div class="action-card-content">
+                            <div class="action-title">STOCK ADJUSTMENT</div>
+                            <div class="action-icon">
+                                <span class="material-icons">show_chart</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-card" onclick="openRestockModal()">
+                        <div class="action-card-content">
+                            <div class="action-title">RESTOCK PRODUCT</div>
+                            <div class="action-icon">
+                                <span class="material-icons">inventory_2</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-card" onclick="openDisposalModal()">
+                        <div class="action-card-content">
+                            <div class="action-title">DISPOSAL</div>
+                            <div class="action-icon">
+                                <span class="material-icons">delete_outline</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add Product Modal -->
+    <div class="modal" id="addModal">
+        <div class="modal-content">
+            <div class="modal-header">Add New Product</div>
+            <div class="form-group">
+                <label class="form-label">Product Name</label>
+                <input type="text" class="form-input" id="productName">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Product ID</label>
+                <input type="text" class="form-input" id="productId">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity</label>
+                <input type="number" class="form-input" id="productQuantity">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Stock Level</label>
+                <select class="form-select" id="stockLevel">
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Expiration Date</label>
+                <input type="text" class="form-input" id="expirationDate" placeholder="MM-YYYY">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Adjust Stock Modal -->
+    <div class="modal" id="adjustModal">
+        <div class="modal-content">
+            <div class="modal-header">Adjust Stock</div>
+            <div class="form-group">
+                <label class="form-label">Select Product</label>
+                <select class="form-select" id="adjustProductSelect">
+                    <option value="">Select a product</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Adjustment Type</label>
+                <select class="form-select" id="adjustmentType">
+                    <option value="add">Add to Stock (+)</option>
+                    <option value="subtract">Remove from Stock (-)</option>
+                    <option value="set">Set Exact Amount</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity</label>
+                <input type="number" class="form-input" id="adjustQuantity" placeholder="Enter quantity">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Update Stock Level</label>
+                <select class="form-select" id="adjustStockLevel">
+                    <option value="">Keep Current</option>
+                    <option value="low">Low</option>
+                    <option value="medium">Medium</option>
+                    <option value="high">High</option>
+                </select>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="adjustStock()">Update Stock</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Restock Product Modal -->
+    <div class="modal" id="restockModal">
+        <div class="modal-content">
+            <div class="modal-header">Restock Product</div>
+            <div class="form-group">
+                <label class="form-label">Select Product</label>
+                <select class="form-select" id="restockProductSelect">
+                    <option value="">Select a product</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Restock Quantity</label>
+                <input type="number" class="form-input" id="restockQuantity" placeholder="Enter quantity to add">
+            </div>
+            <div class="form-group">
+                <label class="form-label">New Expiration Date</label>
+                <input type="text" class="form-input" id="restockExpiration" placeholder="MM-YYYY (optional)">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="restockProduct()">Restock</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Disposal Modal -->
+    <div class="modal" id="disposalModal">
+        <div class="modal-content">
+            <div class="modal-header">Product Disposal</div>
+            <div class="form-group">
+                <label class="form-label">Product ID</label>
+                <select class="form-select" id="disposalProductId">
+                    <option value="">Select a product</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Batch Number</label>
+                <input type="text" class="form-input" id="disposalBatchNumber" placeholder="Enter batch number">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Quantity to Dispose</label>
+                <input type="number" class="form-input" id="disposalQuantity" placeholder="Enter quantity">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Reason for Disposal</label>
+                <select class="form-select" id="disposalReason">
+                    <option value="">Select reason</option>
+                    <option value="expired">Expired</option>
+                    <option value="damaged">Damaged</option>
+                    <option value="contaminated">Contaminated</option>
+                    <option value="recalled">Recalled</option>
+                    <option value="quality-issues">Quality Issues</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+            <div class="form-group" id="otherReasonGroup" style="display: none;">
+                <label class="form-label">Specify Other Reason</label>
+                <textarea class="form-input" id="disposalOtherReason" rows="3" placeholder="Please specify the reason"></textarea>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Additional Notes</label>
+                <textarea class="form-input" id="disposalNotes" rows="3" placeholder="Optional notes about disposal"></textarea>
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="disposeProduct()">Dispose Product</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="Inventory.js"></script>
+</body>
+</html>
