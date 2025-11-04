@@ -8,7 +8,6 @@ let inventory = [
 
 let disposalHistory = [];
 
-// Render Inventory List
 function renderInventory(items = inventory) {
     const list = document.getElementById('inventoryList');
     list.innerHTML = items.map((item, index) => `
