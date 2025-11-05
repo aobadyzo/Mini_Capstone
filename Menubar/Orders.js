@@ -117,7 +117,7 @@ function renderOrders(orders = ordersData) {
     const container = document.getElementById('ordersContainer');
     
     container.innerHTML = orders.map((order, index) => `
-        <div class="order-item" style="animation-delay: ${index * 0.1}s" onclick="viewOrderDetails('${order.id}')">
+        <div class="table-row" onclick="viewOrderDetails('${order.id}')">
             <div>${order.id}</div>
             <div>${order.customer}</div>
             <div>${order.totalItems} items</div>
@@ -126,11 +126,62 @@ function renderOrders(orders = ordersData) {
                 <span class="status-badge status-${order.status}">${order.status}</span>
             </div>
             <div>${order.address}</div>
-            <div>
-                <span class="material-icons view-icon">visibility</span>
+            <div class="action-buttons">
+                <button class="action-btn check-btn" onclick="approveOrder(event, '${order.id}')" title="Approve Order">
+                    <span class="material-icons">check</span>
+                </button>
+                <button class="action-btn cancel-btn" onclick="cancelOrder(event, '${order.id}')" title="Cancel Order">
+                    <span class="material-icons">close</span>
+                </button>
             </div>
         </div>
     `).join('');
+}
+
+// Approve Order
+function approveOrder(event, orderId) {
+    event.stopPropagation();
+    const order = ordersData.find(o => o.id === orderId);
+    if (order) {
+        order.status = 'completed';
+        renderOrders();
+        showNotification(`Order ${orderId} approved!`, 'success');
+    }
+}
+
+// Cancel Order
+function cancelOrder(event, orderId) {
+    event.stopPropagation();
+    const order = ordersData.find(o => o.id === orderId);
+    if (order) {
+        order.status = 'cancelled';
+        renderOrders();
+        showNotification(`Order ${orderId} cancelled!`, 'error');
+    }
+}
+
+// Show Notification
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.textContent = message;
+    notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        padding: 15px 25px;
+        background: ${type === 'success' ? '#4caf50' : '#f44336'};
+        color: white;
+        border-radius: 10px;
+        font-family: Inter, sans-serif;
+        font-weight: 500;
+        z-index: 10000;
+        animation: slideIn 0.3s ease-out;
+    `;
+    document.body.appendChild(notification);
+    setTimeout(() => {
+        notification.style.animation = 'slideOut 0.3s ease-out';
+        setTimeout(() => notification.remove(), 300);
+    }, 2000);
 }
 
 // View Order Details
@@ -195,17 +246,6 @@ function closeOrderModal() {
 
 // Search Functionality
 const searchInput = document.getElementById('searchInput');
-const searchPlaceholder = document.querySelector('.text-wrapper-8');
-
-searchInput.addEventListener('focus', () => {
-    searchPlaceholder.style.display = 'none';
-});
-
-searchInput.addEventListener('blur', () => {
-    if (searchInput.value === '') {
-        searchPlaceholder.style.display = 'block';
-    }
-});
 
 searchInput.addEventListener('input', (e) => {
     const searchTerm = e.target.value.toLowerCase();
