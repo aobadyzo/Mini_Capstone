@@ -1,17 +1,21 @@
 // Inventory Data
 let inventory = [
-    { id: '123', name: 'Fresh Fish', quantity: 12, stockLevel: 'low', expiration: '12-2026', dateAdded: '10-2024' },
-    { id: '124', name: 'Chicken Breast', quantity: 45, stockLevel: 'medium', expiration: '06-2025', dateAdded: '10-2024' },
-    { id: '125', name: 'Ground Beef', quantity: 78, stockLevel: 'high', expiration: '08-2025', dateAdded: '10-2024' },
-    { id: '126', name: 'Salmon Fillet', quantity: 8, stockLevel: 'low', expiration: '11-2024', dateAdded: '10-2024' }
+    { id: '123', name: 'Fresh Fish', quantity: 12, stockLevel: 'low', expiration: '12-2026', dateAdded: '10-2024', image: null },
+    { id: '124', name: 'Chicken Breast', quantity: 45, stockLevel: 'medium', expiration: '06-2025', dateAdded: '10-2024', image: null },
+    { id: '125', name: 'Ground Beef', quantity: 78, stockLevel: 'high', expiration: '08-2025', dateAdded: '10-2024', image: null },
+    { id: '126', name: 'Salmon Fillet', quantity: 8, stockLevel: 'low', expiration: '11-2024', dateAdded: '10-2024', image: null }
 ];
 
 let disposalHistory = [];
+let currentProductImage = null;
 
 function renderInventory(items = inventory) {
     const list = document.getElementById('inventoryList');
     list.innerHTML = items.map((item, index) => `
         <div class="table-row" style="animation-delay: ${0.9 + index * 0.1}s">
+            <div class="product-image-cell">
+                ${item.image ? `<img src="${item.image}" alt="${item.name}">` : '<span class="material-icons">image</span>'}
+            </div>
             <div>${item.name}</div>
             <div>${item.id}</div>
             <div>${item.quantity}</div>
@@ -83,7 +87,13 @@ function addProduct() {
         const dateAdded = `${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
         
         inventory.push({
-            id, name, quantity: parseInt(quantity), stockLevel, expiration, dateAdded
+            id, 
+            name, 
+            quantity: parseInt(quantity), 
+            stockLevel, 
+            expiration, 
+            dateAdded,
+            image: currentProductImage
         });
         
         renderInventory();
@@ -94,6 +104,8 @@ function addProduct() {
         document.getElementById('productId').value = '';
         document.getElementById('productQuantity').value = '';
         document.getElementById('expirationDate').value = '';
+        currentProductImage = null;
+        resetImagePreview();
         
         alert('Product added successfully!');
     } else {
@@ -291,6 +303,31 @@ document.getElementById('disposalReason').addEventListener('change', (e) => {
         otherReasonGroup.style.display = 'none';
     }
 });
+
+// Image upload handling
+document.getElementById('productImage').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            currentProductImage = event.target.result;
+            const preview = document.getElementById('imagePreview');
+            preview.innerHTML = `<img src="${event.target.result}" alt="Product Preview">`;
+            preview.classList.add('has-image');
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function resetImagePreview() {
+    const preview = document.getElementById('imagePreview');
+    preview.innerHTML = `
+        <span class="material-icons">add_photo_alternate</span>
+        <span>Click to upload image</span>
+    `;
+    preview.classList.remove('has-image');
+    document.getElementById('productImage').value = '';
+}
 
 // Close modal on outside click
 document.querySelectorAll('.modal').forEach(modal => {

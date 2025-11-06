@@ -86,6 +86,7 @@
                     <div class="divider-bar"></div>
                     
                     <div class="table-header">
+                        <div>IMAGE</div>
                         <div>NAME</div>
                         <div>ID</div>
                         <div>QUANTITY</div>
@@ -100,7 +101,7 @@
                     </div>
                 </div>
                 
-                <div class="action-buttons" style="grid-template-columns: repeat(4, 1fr);">
+                <div class="action-buttons">
                     <div class="action-card" onclick="openAddModal()">
                         <div class="action-card-content">
                             <div class="action-title">ADD PRODUCT</div>
@@ -142,6 +143,18 @@
     <div class="modal" id="addModal">
         <div class="modal-content">
             <div class="modal-header">Add New Product</div>
+            
+            <div class="form-group">
+                <label class="form-label">Product Image</label>
+                <div class="image-upload-container">
+                    <input type="file" id="productImage" accept="image/*" style="display: none;">
+                    <div class="image-preview" id="imagePreview" onclick="document.getElementById('productImage').click()">
+                        <span class="material-icons">add_photo_alternate</span>
+                        <span>Click to upload image</span>
+                    </div>
+                </div>
+            </div>
+            
             <div class="form-group">
                 <label class="form-label">Product Name</label>
                 <input type="text" class="form-input" id="productName">

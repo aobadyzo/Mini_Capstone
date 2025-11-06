@@ -248,8 +248,8 @@ body {
 
 .table-header {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1.5fr 2fr 2fr 0.5fr;
-    gap: 20px;
+    grid-template-columns: 0.8fr 2fr 1fr 1fr 1.5fr 1.8fr 1.8fr 0.5fr;
+    gap: 15px;
     padding: 15px 30px;
     font-size: 12px;
     font-weight: 600;
@@ -263,9 +263,9 @@ body {
 
 .table-row {
     display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1.5fr 2fr 2fr 0.5fr;
-    gap: 20px;
-    padding: 25px 30px;
+    grid-template-columns: 0.8fr 2fr 1fr 1fr 1.5fr 1.8fr 1.8fr 0.5fr;
+    gap: 15px;
+    padding: 20px 30px;
     margin-bottom: 10px;
     background: linear-gradient(0deg, #ffffff 0%, #cccccc 100%);
     border-radius: 30px;
@@ -273,6 +273,28 @@ body {
     align-items: center;
     animation: slideInRow 0.5s ease-out both;
     transition: all 0.3s ease;
+}
+
+.product-image-cell {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.product-image-cell img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-image-cell .material-icons {
+    color: #ccc;
+    font-size: 28px;
 }
 
 @keyframes slideInRow {
@@ -342,7 +364,7 @@ body {
 /* Action Buttons */
 .action-buttons {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 30px;
     margin-top: 40px;
     animation: fadeInUp 0.8s ease-out 1.3s both;
@@ -442,6 +464,69 @@ body {
     scrollbar-color: #f59d9d transparent;
 }
 
+/* Image Upload Styles */
+.image-upload-container {
+    margin-bottom: 10px;
+}
+
+.image-preview {
+    width: 100%;
+    height: 200px;
+    border: 2px dashed #e0e0e0;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #f9f9f9;
+    overflow: hidden;
+    position: relative;
+}
+
+.image-preview:hover {
+    border-color: #f59e9e;
+    background: #fff5f5;
+}
+
+.image-preview .material-icons {
+    font-size: 48px;
+    color: #f59e9e;
+    margin-bottom: 10px;
+}
+
+.image-preview span:not(.material-icons) {
+    color: #666;
+    font-size: 14px;
+}
+
+.image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.image-preview.has-image {
+    border-style: solid;
+    border-color: #f59e9e;
+}
+
+.image-preview.has-image:hover::after {
+    content: 'Click to change image';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -467,6 +552,8 @@ body {
     border-radius: 30px;
     max-width: 500px;
     width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
     animation: scaleIn 0.3s ease-out;
 }
 
@@ -563,5 +650,9 @@ body {
     .table-header, .table-row {
         font-size: 11px;
         padding: 15px 20px;
+    }
+    
+    .action-buttons {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
