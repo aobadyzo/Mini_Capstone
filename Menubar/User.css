@@ -593,13 +593,8 @@ body {
 }
 
 .user-edit-modal .divider {
-    position: absolute;
-    top: 185px;
-    left: 60px;
-    width: 1230px;
-    height: 8px;
-    background-color: #f59e9e;
-    border-radius: 154px;
+    /* removed: visual divider line — hidden per user request */
+    display: none !important;
 }
 
 /* Form Fields */
@@ -663,7 +658,8 @@ body {
 /* Button Section */
 .button-section {
     position: absolute;
-    bottom: 35px;
+    /* moved up a bit to sit higher inside the modal */
+    bottom: 95px;
     left: 60px;
 }
 

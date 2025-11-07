@@ -108,6 +108,24 @@ function addProduct() {
         resetImagePreview();
         
         alert('Product added successfully!');
+        // Send to backend API (if running)
+        fetch('http://localhost:3001/api/inventory/add', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                sku: id,
+                name,
+                description: '',
+                price: 0.00,
+                quantity: parseInt(quantity),
+                imageBase64: currentProductImage,
+                imageFileName: null,
+                performedBy: null
+            })
+        }).then(r => r.json()).then(j => console.log('API addProduct', j)).catch(e => console.warn('API not available', e));
+
+        // Also create an audit log entry (best-effort)
+        sendAudit(null, 'AddUser', `AddProduct: ${id} - ${name}`);
     } else {
         alert('Please fill in all fields');
     }
@@ -153,6 +171,15 @@ function adjustStock() {
         document.getElementById('adjustQuantity').value = '';
         
         alert('Stock adjusted successfully!');
+
+        // Notify backend
+        fetch('http://localhost:3001/api/inventory/adjust', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: id, adjustmentType: adjustmentType, quantity: parseInt(quantity), stockLevel, performedBy: null })
+        }).then(r => r.json()).then(j => console.log('API adjustStock', j)).catch(e => console.warn('API not available', e));
+        // Audit
+        sendAudit(null, 'ChangedPassword', `StockAdjustment: ${id} ${adjustmentType} ${quantity}`);
     }
 }
 
@@ -198,6 +225,15 @@ function restockProduct() {
         document.getElementById('restockExpiration').value = '';
         
         alert(`Successfully restocked ${quantity} units of ${item.name}`);
+
+        // Notify backend
+        fetch('http://localhost:3001/api/inventory/restock', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: id, quantity: parseInt(quantity), expiration: expiration, performedBy: null, batchId: null })
+        }).then(r => r.json()).then(j => console.log('API restock', j)).catch(e => console.warn('API not available', e));
+        // Audit
+        sendAudit(null, 'EditUser', `Restock: ${id} +${quantity} (exp:${expiration || 'n/a'})`);
     }
 }
 
@@ -281,7 +317,45 @@ function disposeProduct() {
         alert(`Successfully disposed ${quantity} units of ${item.name}\nBatch: ${batchNumber}\nReason: ${disposalRecord.reason}`);
         
         console.log('Disposal History:', disposalHistory);
+
+        // Notify backend
+        fetch('http://localhost:3001/api/inventory/dispose', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: id, batchId: batchNumber, quantity: quantity, reason: disposalRecord.reason, notes: notes, performedBy: null })
+        }).then(r => r.json()).then(j => console.log('API dispose', j)).catch(e => console.warn('API not available', e));
+        // Audit
+        sendAudit(null, 'ChangedPassword', `Dispose: ${id} -${quantity} (batch:${batchNumber})`);
     }
+}
+
+// --- Navigation and audit helper ---
+// Map nav label -> filename
+const navMap = {
+    'Dashboard': '../Home Page/index.html',
+    'User': 'User.html',
+    'Orders': 'Orders.html',
+    'Analytics': 'Analytics.html',
+    'Inventory': 'Inventory.html',
+    'History': 'History.html',
+    'Settings': 'Settings.html'
+};
+document.querySelectorAll('.nav-item').forEach(item => {
+    item.addEventListener('click', function () {
+        document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+        this.classList.add('active');
+        const label = this.textContent.trim();
+        const target = navMap[label];
+        if (target) window.location.href = target;
+    });
+});
+
+function sendAudit(performedBy, actionType, details) {
+    fetch('http://localhost:3001/api/audit', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ performedBy: performedBy || null, actionType, details })
+    }).then(r => r.json()).then(j => console.log('Audit:', j)).catch(e => {/* ignore */});
 }
 
 // Search functionality

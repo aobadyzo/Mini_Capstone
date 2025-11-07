@@ -12,8 +12,6 @@ let maintenanceDataStore = {
   contactMessage: ''
 };
 
-let darkModeStore = false;
-
 // Load saved data on page load
 window.addEventListener('DOMContentLoaded', () => {
   loadAccountData();
@@ -85,23 +83,35 @@ function saveMaintenanceSettings(event) {
 function toggleDarkMode(event) {
   event.stopPropagation();
   const toggle = event.target;
-  toggle.classList.toggle('active');
-  
-  darkModeStore = toggle.classList.contains('active');
-  
-  if (darkModeStore) {
-    document.body.classList.add('dark-mode');
+  // Use shared theme API if available
+  let next;
+  if (window.MiniCapstoneTheme && typeof window.MiniCapstoneTheme.toggle === 'function') {
+    next = window.MiniCapstoneTheme.toggle();
   } else {
-    document.body.classList.remove('dark-mode');
+    // fallback: toggle local class
+    toggle.classList.toggle('active');
+    next = toggle.classList.contains('active');
+    if (next) document.body.classList.add('dark-mode'); else document.body.classList.remove('dark-mode');
   }
+
+  // Reflect state on the toggle element
+  if (next) toggle.classList.add('active'); else toggle.classList.remove('active');
 }
 
 function loadDarkMode() {
   const toggle = document.querySelector('.toggle-off');
-  
-  if (darkModeStore) {
+  if (!toggle) return;
+
+  const isDark = window.MiniCapstoneTheme && typeof window.MiniCapstoneTheme.isDark === 'function'
+    ? window.MiniCapstoneTheme.isDark()
+    : false;
+
+  if (isDark) {
     toggle.classList.add('active');
     document.body.classList.add('dark-mode');
+  } else {
+    toggle.classList.remove('active');
+    document.body.classList.remove('dark-mode');
   }
 }
 
