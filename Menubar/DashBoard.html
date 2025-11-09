@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="DashBoard.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="logo">
+                <div class="logo-icon">
+                    <span class="material-icons">dashboard</span>
+                </div>
+                <span>Dashboard</span>
+            </div>
+
+            <div class="nav-item active">
+                <div class="nav-icon">
+                    <span class="material-icons">dashboard</span>
+                </div>
+                <span>Dashboard</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">person</span>
+                </div>
+                <span>User</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">shopping_cart</span>
+                </div>
+                <span>Orders</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">analytics</span>
+                </div>
+                <span>Analytics</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">inventory_2</span>
+                </div>
+                <span>Inventory</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">history</span>
+                </div>
+                <span>History</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">settings</span>
+                </div>
+                <span>Settings</span>
+            </div>
+            <div class="nav-item">
+                <div class="nav-icon">
+                    <span class="material-icons">logout</span>
+                </div>
+                <span>Logout</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Header -->
+            <div class="header">
+                <h1>Dashboard</h1>
+                <div class="user-profile">
+                    <span>Admin</span>
+                    <div class="avatar">
+                        <span class="material-icons">person</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">
+                            <span class="material-icons">trending_up</span>
+                        </div>
+                        <span class="stat-title">Sales</span>
+                    </div>
+                    <div class="stat-value">30</div>
+                    <div class="stat-change">
+                        <span class="material-icons">arrow_upward</span>
+                        <span>6%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">
+                            <span class="material-icons">attach_money</span>
+                        </div>
+                        <span class="stat-title">Revenue</span>
+                    </div>
+                    <div class="stat-value">30</div>
+                    <div class="stat-change">
+                        <span class="material-icons">arrow_upward</span>
+                        <span>6%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">
+                            <span class="material-icons">shopping_bag</span>
+                        </div>
+                        <span class="stat-title">Orders</span>
+                    </div>
+                    <div class="stat-value">30</div>
+                    <div class="stat-change">
+                        <span class="material-icons">arrow_upward</span>
+                        <span>6%</span>
+                    </div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-card-header">
+                        <div class="stat-icon">
+                            <span class="material-icons">people</span>
+                        </div>
+                        <span class="stat-title">Customers</span>
+                    </div>
+                    <div class="stat-value">30</div>
+                    <div class="stat-change">
+                        <span class="material-icons">arrow_upward</span>
+                        <span>6%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts Grid -->
+            <div class="analytics-grid">
+                <!-- Weekly Analytics Chart -->
+                <div class="chart-container">
+                    <div class="chart-title">Weekly Analytics</div>
+                    <div class="simple-chart">
+                        <div class="chart-grid">
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                            <div class="grid-line"></div>
+                        </div>
+                        <div class="chart-bars">
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 60%;" title="Sunday: 60"></div>
+                                </div>
+                                <div class="day-label">Sun</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 80%;" title="Monday: 80"></div>
+                                </div>
+                                <div class="day-label">Mon</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 45%;" title="Tuesday: 45"></div>
+                                </div>
+                                <div class="day-label">Tue</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 90%;" title="Wednesday: 90"></div>
+                                </div>
+                                <div class="day-label">Wed</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 70%;" title="Thursday: 70"></div>
+                                </div>
+                                <div class="day-label">Thu</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 85%;" title="Friday: 85"></div>
+                                </div>
+                                <div class="day-label">Fri</div>
+                            </div>
+                            <div class="bar-container">
+                                <div class="bar-wrapper">
+                                    <div class="bar" style="height: 65%;" title="Saturday: 65"></div>
+                                </div>
+                                <div class="day-label">Sat</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pie Chart -->
+                <div class="pie-container">
+                    <div class="chart-title">Inventory</div>
+                    <div class="pie-chart">
+                        <svg width="200" height="200" viewBox="0 0 200 200">
+                            <circle cx="100" cy="100" r="80" fill="none" stroke="#f59d9d" stroke-width="40"/>
+                        </svg>
+                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); text-align: center;">
+                            <div style="font-size: 32px; font-weight: 600;">78</div>
+                            <div style="font-size: 12px; color: #666;">Total Stock</div>
+                        </div>
+                    </div>
+                    <div class="pie-legend">
+                        <div class="legend-color"></div>
+                        <span style="font-size: 12px; color: #666;">Total Stock Level</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders Table -->
+            <div class="orders-table">
+                <div class="table-header">
+                    <div>Order ID</div>
+                    <div>Customer</div>
+                    <div>Item</div>
+                    <div>Total</div>
+                    <div>Status</div>
+                </div>
+                <div class="table-body">
+                    <div class="table-row">
+                        <div>#001</div>
+                        <div>John Doe</div>
+                        <div>Product A</div>
+                        <div>$120.00</div>
+                        <div>Completed</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#002</div>
+                        <div>Jane Smith</div>
+                        <div>Product B</div>
+                        <div>$85.50</div>
+                        <div>Pending</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#003</div>
+                        <div>Bob Wilson</div>
+                        <div>Product C</div>
+                        <div>$200.00</div>
+                        <div>Completed</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#004</div>
+                        <div>Alice Johnson</div>
+                        <div>Product D</div>
+                        <div>$150.00</div>
+                        <div>Shipped</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#005</div>
+                        <div>Mike Brown</div>
+                        <div>Product E</div>
+                        <div>$99.99</div>
+                        <div>Pending</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#006</div>
+                        <div>Sarah Davis</div>
+                        <div>Product F</div>
+                        <div>$175.50</div>
+                        <div>Completed</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#007</div>
+                        <div>Tom Wilson</div>
+                        <div>Product G</div>
+                        <div>$220.00</div>
+                        <div>Processing</div>
+                    </div>
+                    <div class="table-row">
+                        <div>#008</div>
+                        <div>Emma Taylor</div>
+                        <div>Product H</div>
+                        <div>$135.75</div>
+                        <div>Completed</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="DashBoard.js"></script>
+</body>
+</html>
