@@ -5,7 +5,7 @@ const config = {
   user: process.env.DB_USER || 'sa',
   password: process.env.DB_PASSWORD || 'YourStrong!Passw0rd',
   server: process.env.DB_SERVER || 'localhost',
-  database: process.env.DB_NAME || 'MiniCapstoneDB',
+  database: process.env.DB_NAME || 'INVENTORY_SYSTEM_DB',
   options: {
     encrypt: false,
     trustServerCertificate: true

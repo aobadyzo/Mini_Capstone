@@ -19,6 +19,21 @@ window.addEventListener('DOMContentLoaded', () => {
   loadDarkMode();
 });
 
+// Fetch users from API for admin usage
+async function fetchUsersFromApi() {
+  try {
+    const res = await fetch('http://localhost:3001/api/users');
+    const json = await res.json();
+    if (json && json.ok && Array.isArray(json.rows)) {
+      console.log('Users from API:', json.rows);
+      return json.rows;
+    }
+  } catch (e) {
+    console.warn('Users API not available', e);
+  }
+  return [];
+}
+
 // Account Modal Functions
 function openAccountModal() {
   document.getElementById('accountModal').classList.add('active');

@@ -267,6 +267,34 @@ document.addEventListener('keydown', (e) => {
 });
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    // Try to fetch orders from backend; fallback to local ordersData
+    try {
+        const res = await fetch('http://localhost:3001/api/orders');
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+            // Map DB rows to ordersData shape used by the UI
+            const apiOrders = json.rows.map(r => ({
+                id: r.OrderNumber || (`ORD-${String(r.OrderId).padStart(3,'0')}`),
+                customer: r.CustomerName || 'Customer',
+                totalItems: r.TotalItems || 0,
+                payment: r.PaymentMethod || r.Payment || 'N/A',
+                status: (r.Status || 'pending').toLowerCase(),
+                address: r.ShippingAddress || r.Address || '',
+                date: r.OrderDate || '',
+                totalPrice: r.TotalPrice || r.TotalAmount || '$0.00',
+                items: []
+            }));
+            // Replace in-memory orders and render
+            ordersData.length = 0;
+            ordersData.push(...apiOrders);
+            renderOrders(ordersData);
+            return;
+        }
+    } catch (e) {
+        console.warn('Orders API not available', e);
+    }
+
+    // Fallback to local static data
     renderOrders();
 });

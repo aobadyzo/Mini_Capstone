@@ -13,21 +13,20 @@ app.get('/api/health', (req, res) => res.json({ ok: true }));
 
 // Add product endpoint
 app.post('/api/inventory/add', async (req, res) => {
-  const { sku, name, description, price, quantity, imageBase64, imageFileName, performedBy } = req.body;
+  const { name, description, price, quantity, imageBase64, imageFileName, performedBy } = req.body;
   try {
     const pool = await poolPromise;
     const tx = pool.transaction();
     await tx.begin();
     const request = tx.request();
-    request.input('SKU', sql.NVarChar(100), sku);
     request.input('Name', sql.NVarChar(255), name);
     request.input('Description', sql.NVarChar(sql.MAX), description);
     request.input('Price', sql.Decimal(18,2), price || 0.00);
     request.input('QuantityOnHand', sql.Int, quantity || 0);
 
-    const insertProduct = `INSERT INTO dbo.Products (SKU, Name, Description, Price, QuantityOnHand, CreatedAt)
+    const insertProduct = `INSERT INTO dbo.Products (Name, Description, Price, QuantityOnHand, CreatedAt)
       OUTPUT INSERTED.ProductId
-      VALUES (@SKU, @Name, @Description, @Price, @QuantityOnHand, SYSUTCDATETIME());`;
+      VALUES (@Name, @Description, @Price, @QuantityOnHand, SYSUTCDATETIME());`;
 
     const result = await request.query(insertProduct);
     const productId = result.recordset[0].ProductId;
@@ -256,6 +255,42 @@ app.get('/api/logs/transactions', async (req, res) => {
   try {
     const pool = await poolPromise;
     const result = await pool.request().query('SELECT TOP (1000) * FROM dbo.TransactionLogs ORDER BY TransactionDate DESC');
+    res.json({ ok: true, rows: result.recordset });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Get products (for Inventory frontend)
+app.get('/api/products', async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request().query(`SELECT ProductId, Name, Description, Price, QuantityOnHand, CreatedAt, UpdatedAt FROM dbo.Products ORDER BY CreatedAt DESC`);
+    res.json({ ok: true, rows: result.recordset });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Get orders (for Orders frontend)
+app.get('/api/orders', async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request().query(`SELECT TOP (1000) OrderId, OrderNumber, CustomerName, TotalItems, TotalPrice, PaymentMethod, Status, ShippingAddress, OrderDate FROM dbo.Orders ORDER BY OrderDate DESC`);
+    res.json({ ok: true, rows: result.recordset });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ ok: false, error: err.message });
+  }
+});
+
+// Get users (for Settings/Login admin views)
+app.get('/api/users', async (req, res) => {
+  try {
+    const pool = await poolPromise;
+    const result = await pool.request().query(`SELECT UserId, Username, FirstName, LastName, Email, Role, PasswordHash, CreatedAt FROM dbo.Users ORDER BY CreatedAt DESC`);
     res.json({ ok: true, rows: result.recordset });
   } catch (err) {
     console.error(err);

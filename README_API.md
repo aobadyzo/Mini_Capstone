@@ -11,7 +11,7 @@ Quick start (local, Windows + SSMS):
    - DB_USER (default: sa)
    - DB_PASSWORD (default shown in db.js - change it!)
    - DB_SERVER (default: localhost)
-   - DB_NAME (default: MiniCapstoneDB)
+  - DB_NAME (default: INVENTORY_SYSTEM_DB)
 
 3) Install dependencies and run the server (PowerShell):
 
@@ -23,7 +23,7 @@ npm run start
 
 4) Server endpoints (JSON):
 - POST /api/inventory/add
-  body: { sku, name, description, price, quantity, imageBase64, imageFileName, performedBy }
+  body: { name, description, price, quantity, imageBase64, imageFileName, performedBy }
 - POST /api/inventory/adjust
   body: { productId, adjustmentType: 'add'|'subtract'|'set', quantity, stockLevel, performedBy }
 - POST /api/inventory/restock

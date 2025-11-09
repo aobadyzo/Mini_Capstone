@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>POS - Cashier</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="../Menubar/Analytics.css">
+  <link rel="stylesheet" href="pos.css">
+  <link rel="stylesheet" href="../Menubar/dark-theme.css">
+</head>
+<body>
+  <div class="pos-container">
+    <header class="pos-header">
+      <a href="../Menubar/Inventory.html" class="back-link">&larr; Back to Admin</a>
+      <h1>Point of Sale (Cashier)</h1>
+    </header>
+
+    <main class="pos-main">
+      <section class="products-list" id="productsList">
+        <h2>Products</h2>
+        <div id="productItems">Loading products...</div>
+      </section>
+
+      <aside class="pos-cart">
+        <h2>Cart</h2>
+        <div id="cartItems">No items</div>
+        <div class="cart-total">Total: <span id="cartTotal">₱0.00</span></div>
+        <div class="cart-actions">
+          <select id="paymentMethod">
+            <option value="Cash">Cash</option>
+            <option value="Credit Card">Credit Card</option>
+            <option value="GCash">GCash</option>
+          </select>
+          <button id="placeOrderBtn">Place Order</button>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="../Menubar/theme.js"></script>
+  <script src="pos.js"></script>
+</body>
+</html>

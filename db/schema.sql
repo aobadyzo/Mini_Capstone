@@ -15,14 +15,14 @@ Notes:
 -- =========================
 -- 1) Create database (optional)
 -- =========================
-IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = N'MiniCapstoneDB')
+IF NOT EXISTS(SELECT * FROM sys.databases WHERE name = N'INVENTORY_SYSTEM_DB')
 BEGIN
-    CREATE DATABASE MiniCapstoneDB;
-    PRINT 'Database MiniCapstoneDB created.';
+    CREATE DATABASE INVENTORY_SYSTEM_DB;
+    PRINT 'Database INVENTORY_SYSTEM_DB created.';
 END
 GO
 
-USE MiniCapstoneDB;
+USE INVENTORY_SYSTEM_DB;
 GO
 
 -- =========================
@@ -151,7 +151,7 @@ GO
 
 CREATE VIEW dbo.v_ProductWithPrimaryImage
 AS
-SELECT p.ProductId, p.SKU, p.Name, p.Description, p.Price, p.QuantityOnHand,
+SELECT p.ProductId, p.Name, p.Description, p.Price, p.QuantityOnHand,
     pi.ImageId, pi.FileName, pi.ContentType, pi.FilePath, pi.IsPrimary
 FROM dbo.Products p
 LEFT JOIN dbo.ProductImages pi
@@ -163,7 +163,6 @@ IF OBJECT_ID('dbo.AddProductWithImage', 'P') IS NOT NULL
     DROP PROCEDURE dbo.AddProductWithImage;
 GO
 CREATE PROCEDURE dbo.AddProductWithImage
-    @SKU NVARCHAR(100) = NULL,
     @Name NVARCHAR(255),
     @Description NVARCHAR(MAX) = NULL,
     @Price DECIMAL(18,2) = 0.00,
@@ -175,8 +174,8 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
-        INSERT INTO dbo.Products (SKU, Name, Description, Price, QuantityOnHand, CreatedAt)
-        VALUES (@SKU, @Name, @Description, @Price, @QuantityOnHand, SYSUTCDATETIME());
+    INSERT INTO dbo.Products (Name, Description, Price, QuantityOnHand, CreatedAt)
+    VALUES (@Name, @Description, @Price, @QuantityOnHand, SYSUTCDATETIME());
 
         DECLARE @ProductId INT = SCOPE_IDENTITY();
 
@@ -211,11 +210,11 @@ GO
 --  1) Enable FILESTREAM at SQL Server level (SQL Server Configuration Manager and sp_configure).
 --  2) Create a database with a FILESTREAM filegroup and file. Example skeleton (do not run unless you configured FILESTREAM):
 --
--- CREATE DATABASE MiniCapstoneDB_FS
+-- CREATE DATABASE INVENTORY_SYSTEM_DB_FS
 -- ON PRIMARY
--- ( NAME = N'MiniCapstoneDB_FS_data', FILENAME = N'C:\SQLData\MiniCapstoneDB_FS.mdf'),
--- FILEGROUP FileStreamGroup CONTAINS FILESTREAM( NAME = N'MiniCapstoneFS', FILENAME = N'C:\SQLFileStream\MiniCapstoneFS')
--- LOG ON ( NAME = N'MiniCapstoneDB_FS_log', FILENAME = N'C:\SQLLogs\MiniCapstoneDB_FS.ldf' );
+-- ( NAME = N'INVENTORY_SYSTEM_DB_FS_data', FILENAME = N'C:\SQLData\INVENTORY_SYSTEM_DB_FS.mdf'),
+-- FILEGROUP FileStreamGroup CONTAINS FILESTREAM( NAME = N'INVENTORY_SYSTEM_DB_FS', FILENAME = N'C:\SQLFileStream\INVENTORY_SYSTEM_DB_FS')
+-- LOG ON ( NAME = N'INVENTORY_SYSTEM_DB_FS_log', FILENAME = N'C:\SQLLogs\INVENTORY_SYSTEM_DB_FS.ldf' );
 --
 -- After creating, you can add a VARBINARY(MAX) FILESTREAM column instead of ImageData VARBINARY(MAX):
 --    ImageData VARBINARY(MAX) FILESTREAM NULL

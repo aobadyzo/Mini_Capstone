@@ -113,15 +113,14 @@ function addProduct() {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                sku: id,
-                name,
-                description: '',
-                price: 0.00,
-                quantity: parseInt(quantity),
-                imageBase64: currentProductImage,
-                imageFileName: null,
-                performedBy: null
-            })
+                    name,
+                    description: '',
+                    price: 0.00,
+                    quantity: parseInt(quantity),
+                    imageBase64: currentProductImage,
+                    imageFileName: null,
+                    performedBy: null
+                })
         }).then(r => r.json()).then(j => console.log('API addProduct', j)).catch(e => console.warn('API not available', e));
 
         // Also create an audit log entry (best-effort)
@@ -176,7 +175,7 @@ function adjustStock() {
         fetch('http://localhost:3001/api/inventory/adjust', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId: id, adjustmentType: adjustmentType, quantity: parseInt(quantity), stockLevel, performedBy: null })
+        body: JSON.stringify({ productId: id, adjustmentType: adjustmentType, quantity: parseInt(quantity), stockLevel, performedBy: null })
         }).then(r => r.json()).then(j => console.log('API adjustStock', j)).catch(e => console.warn('API not available', e));
         // Audit
         sendAudit(null, 'ChangedPassword', `StockAdjustment: ${id} ${adjustmentType} ${quantity}`);
@@ -412,5 +411,29 @@ document.querySelectorAll('.modal').forEach(modal => {
     });
 });
 
-// Initial render
-renderInventory();
+// Initial render: try fetching from backend API first, fall back to local data
+(async function initInventory() {
+    try {
+        const res = await fetch('http://localhost:3001/api/products');
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.rows)) {
+            // Map DB products to inventory shape used by UI
+            inventory = json.rows.map(p => ({
+                id: p.ProductId || String(p.ProductId),
+                name: p.Name || 'Product',
+                quantity: p.QuantityOnHand || 0,
+                stockLevel: (p.QuantityOnHand < 20) ? 'low' : (p.QuantityOnHand < 50) ? 'medium' : 'high',
+                expiration: null,
+                dateAdded: p.CreatedAt ? new Date(p.CreatedAt).toLocaleDateString() : '',
+                image: null
+            }));
+            renderInventory(inventory);
+            return;
+        }
+    } catch (e) {
+        console.warn('Products API not available', e);
+    }
+
+    // fallback
+    renderInventory();
+})();
