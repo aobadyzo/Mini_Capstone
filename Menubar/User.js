@@ -41,6 +41,17 @@ function openEditModal(id, firstName, lastName, role, email, contact, address) {
     document.body.style.overflow = 'hidden'; // Prevent background scrolling
 }
 
+// Audit helper (best-effort client-side wrapper)
+function sendAudit(performedBy, actionType, details) {
+    try {
+        fetch('http://localhost:3001/api/audit', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ performedBy: performedBy || null, actionType, details })
+        }).then(r => r.json()).then(j => console.log('Audit:', j)).catch(e => {/* ignore */});
+    } catch(e) { /* ignore */ }
+}
+
 // Close Modal
 function closeModal() {
     const modal = document.getElementById('editModal');
@@ -71,25 +82,22 @@ function saveUser() {
         return;
     }
     
-    // Save data (in real app, this would be an API call)
-    console.log('Saving user data:', {
-        id,
-        firstName,
-        lastName,
-        role,
-        email,
-        contact,
-        address
-    });
-    
-    // Update the table row with new data
-    updateTableRow(id, firstName, lastName, role, email);
-    
-    // Show success message
-    alert('✅ User information saved successfully!');
-    
-    // Close modal
-    closeModal();
+    // Call server to update user so DB and audit logs are updated
+    const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+    fetch(`http://localhost:3001/api/users/${encodeURIComponent(id)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, role, performedBy })
+    }).then(r => r.json()).then(j => {
+        if (j && j.ok) {
+            updateTableRow(id, firstName, lastName, role, email);
+            alert('✅ User information saved successfully!');
+            closeModal();
+            try { sendAudit(performedBy, 'EditUser', `Edited user id=${id} (${firstName} ${lastName})`); } catch(e){}
+        } else {
+            alert('Failed to update user: ' + (j && j.error ? j.error : 'unknown'));
+        }
+    }).catch(e => { console.warn('API not available', e); alert('Could not reach API to update user.'); });
 }
 
 // Update Table Row with new data
@@ -114,6 +122,8 @@ function updateTableRow(id, firstName, lastName, role, email) {
                 roleBadge.classList.add('role-admin');
             } else if (role === 'Manager') {
                 roleBadge.classList.add('role-manager');
+            } else if (role === 'Cashier') {
+                roleBadge.classList.add('role-cashier');
             } else {
                 roleBadge.classList.add('role-staff');
             }
@@ -137,21 +147,40 @@ function resetPassword() {
     const firstName = document.getElementById('editFirstName').value;
     const lastName = document.getElementById('editLastName').value;
     const email = document.getElementById('editEmail').value;
-    
+    // Only allow resetting another user's password if current user is Admin
+    const currentUser = (function(){ try{ return JSON.parse(localStorage.getItem('currentUser')); }catch(e){return null;} })();
+    if (!currentUser) { alert('No current user session found'); return; }
+    if (Number(currentUser.UserId) !== Number(userId) && ((currentUser.Role||'').toString().toLowerCase() !== 'admin')) {
+        alert('You may only reset your own password. Admins can reset other users.');
+        return;
+    }
+
     const confirmed = confirm(
         `Reset password for:\n\n` +
         `User ID: ${userId}\n` +
         `Name: ${firstName} ${lastName}\n` +
         `Email: ${email}\n\n` +
-        `A password reset link will be sent to their email address.\n\n` +
-        `Are you sure you want to continue?`
+        `This will set the user's password back to the default for their role. Continue?`
     );
-    
-    if (confirmed) {
-        // In real app, this would trigger password reset email
-        console.log('Password reset requested for user:', userId);
-        alert('✉️ Password reset email sent successfully to ' + email);
-    }
+    if (!confirmed) return;
+
+    // Determine default password by role
+    const role = document.getElementById('editUserRole').value || '';
+    const defaultPw = (role.toString().toLowerCase() === 'admin') ? 'admin123' : 'cashier123';
+    const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+
+    fetch(`http://localhost:3001/api/users/${encodeURIComponent(userId)}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ firstName, lastName, email, role, performedBy, newPassword: defaultPw })
+    }).then(r => r.json()).then(j => {
+        if (j && j.ok) {
+            alert('Password has been reset to default for this role.');
+            try { sendAudit(performedBy, 'ChangedPassword', `Reset password for user id=${userId}`); } catch(e){}
+        } else {
+            alert('Failed to reset password: ' + (j && j.error ? j.error : 'unknown'));
+        }
+    }).catch(e => { console.warn('API not available', e); alert('Could not reach API to reset password.'); });
 }
 
 // Upload Photo functionality - Edit profile picture
@@ -296,64 +325,49 @@ function addNewUser() {
         alert('This email address is already registered. Please use a different email.');
         return;
     }
-    
-    // Get current date and time
-    const now = new Date();
-    const dateCreated = now.toLocaleString('en-US', {
-        month: '2-digit',
-        day: '2-digit',
-        year: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit',
-        hour12: true
-    }).replace(',', '');
-    
-    // Create new table row
-    const userList = document.getElementById('userList');
-    const newRow = document.createElement('div');
-    newRow.className = 'table-row';
-    newRow.style.animation = 'slideInRow 0.5s ease-out';
-    newRow.setAttribute('onclick', 
-        `openEditModal('${id}', '${firstName}', '${lastName}', '${role}', '${email}', '${contact}', '${address}')`
-    );
-    
-    // Determine role badge class
-    let roleBadgeClass = 'role-staff';
-    if (role === 'Admin') {
-        roleBadgeClass = 'role-admin';
-    } else if (role === 'Manager') {
-        roleBadgeClass = 'role-manager';
-    }
-    
-    newRow.innerHTML = `
-        <div>${firstName}</div>
-        <div>${lastName}</div>
-        <div>${id}</div>
-        <div><span class="role-badge ${roleBadgeClass}">${role}</span></div>
-        <div>${dateCreated}</div>
-        <div>${email}</div>
-    `;
-    
-    // Add to table
-    userList.appendChild(newRow);
-    
-    // Log the new user data
-    console.log('New user added:', {
-        id,
-        firstName,
-        lastName,
-        role,
-        email,
-        contact,
-        address,
-        dateCreated
-    });
-    
-    // Show success message
-    alert(`✅ User account created successfully!\n\nUser ID: ${id}\nName: ${firstName} ${lastName}\nEmail: ${email}\nRole: ${role}\n\nA welcome email has been sent to the user.`);
-    
-    // Close modal
-    closeAddModal();
+        // Prefer server-side creation so DB and audit logs are updated
+        // Use firstName as username by default
+        const username = firstName || `user${id}`;
+        // Default password based on role
+        const newPassword = (role && role.toString().toLowerCase() === 'admin') ? 'admin123' : 'cashier123';
+        const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+        fetch('http://localhost:3001/api/users', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ username, firstName, lastName, email, role, performedBy, password: newPassword })
+        }).then(r => r.json()).then(j => {
+            if (j && j.ok) {
+                // Append row locally for immediate UI feedback
+                const now = new Date();
+                const dateCreated = now.toLocaleString('en-US', {
+                    month: '2-digit', day: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit', hour12: true
+                }).replace(',', '');
+                const userList = document.getElementById('userList');
+                const newRow = document.createElement('div');
+                newRow.className = 'table-row';
+                newRow.style.animation = 'slideInRow 0.5s ease-out';
+                newRow.setAttribute('onclick', `openEditModal('${j.userId}', '${firstName}', '${lastName}', '${role}', '${email}', '${contact}', '${address}')`);
+                let roleBadgeClass = 'role-staff';
+                if (role === 'Admin') roleBadgeClass = 'role-admin';
+                else if (role === 'Manager') roleBadgeClass = 'role-manager';
+                else if (role === 'Cashier') roleBadgeClass = 'role-cashier';
+                newRow.innerHTML = `
+                    <div>${firstName}</div>
+                    <div>${lastName}</div>
+                    <div>${j.userId}</div>
+                    <div><span class="role-badge ${roleBadgeClass}">${role}</span></div>
+                    <div>${dateCreated}</div>
+                    <div>${email}</div>
+                `;
+                userList.appendChild(newRow);
+                alert(`✅ User account created successfully!\n\nUser ID: ${j.userId}\nName: ${firstName} ${lastName}\nEmail: ${email}\nRole: ${role}`);
+                closeAddModal();
+                // Audit already recorded server-side, but attempt a lightweight client audit log as well (best-effort)
+                try { sendAudit(performedBy, 'AddUser', `Created user ${email} (id=${j.userId})`); } catch(e){}
+            } else {
+                alert('Failed to create user: ' + (j && j.error ? j.error : 'unknown'));
+            }
+        }).catch(e => { console.warn('API not available', e); alert('Could not reach API to add user.'); });
 }
 
 // Upload Photo for Add Modal

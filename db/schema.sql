@@ -48,6 +48,7 @@ CREATE TABLE dbo.Products (
     Description NVARCHAR(MAX) NULL,
     Price DECIMAL(18,2) NOT NULL DEFAULT(0.00),
     QuantityOnHand INT NOT NULL DEFAULT 0,
+    Expiration NVARCHAR(50) NULL,
     ReorderLevel INT NOT NULL DEFAULT 0,
     CreatedAt DATETIME2 NOT NULL DEFAULT SYSUTCDATETIME(),
     UpdatedAt DATETIME2 NULL
@@ -98,6 +99,9 @@ CREATE TABLE dbo.InventoryHistory (
     ProductId INT NOT NULL REFERENCES dbo.Products(ProductId),
     PerformedByUserId INT NULL REFERENCES dbo.Users(UserId),
     BatchId NVARCHAR(100) NULL,
+    -- Store the batch/lot expiration as a short string (UI uses formats like '12-2026').
+    -- Make non-NULL with a sensible default so schema updates on existing DBs do not fail.
+    Expiration NVARCHAR(50) NOT NULL DEFAULT(''),
     ActionType NVARCHAR(50) NOT NULL CONSTRAINT CK_InventoryHistory_ActionType CHECK (ActionType IN ('StockAdjustment','AddProduct','Restock','DisposedProduct','ArchivedProduct')),
     QuantityChange INT NOT NULL,
     Note NVARCHAR(1000) NULL,

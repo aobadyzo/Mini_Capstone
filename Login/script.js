@@ -24,7 +24,65 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = loginForm.querySelectorAll('input')[0].value.trim();
         const password = loginForm.querySelectorAll('input')[1].value.trim();
 
-        try {
+        // Local fallback users for testing when the API server is not running
+        const localUsers = [
+            { UserId: 1, Username: 'admin', Email: 'admin@example.local', PasswordHash: 'admin123', FullName: 'Administrator', Role: 'admin', CreatedAt: new Date().toISOString() },
+            { UserId: 2, Username: 'cashier', Email: 'cashier@example.local', PasswordHash: 'cashier123', FullName: 'Cashier User', Role: 'cashier', CreatedAt: new Date().toISOString() }
+        ];
+
+        // Helper: perform user lookup + redirect. Returns true if login succeeded (redirect attempted).
+        const performLoginCheck = (jsonData) => {
+            try {
+                console.log('API rows count:', jsonData && jsonData.rows ? jsonData.rows.length : 'no rows');
+                if (jsonData && jsonData.ok && Array.isArray(jsonData.rows)) {
+                    console.log('Searching users for', username);
+                    // find user by username or email
+                    const user = jsonData.rows.find(u => (u.Username && u.Username.toLowerCase() === username.toLowerCase()) || (u.Email && u.Email.toLowerCase() === username.toLowerCase()));
+                    console.log('Found user object:', user);
+                    if (user) {
+                        // Validate password by comparing plain text (for demo purposes)
+                        const storedHash = (user.PasswordHash || '').toString().trim();
+                        console.log('Comparing entered password (len)', password.length, 'to stored PasswordHash (trimmed):', storedHash ? `(len ${storedHash.length})` : '(empty)');
+                        if (password === storedHash) {
+                            // Persist current user in localStorage so other pages (nav) can adjust UI
+                            try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch (e) { console.warn('Could not persist currentUser', e); }
+
+                            const baseUrl = `${location.protocol}//${location.hostname}${location.port ? (':' + location.port) : ''}`;
+                            console.log('Redirecting user:', user.Role);
+                            // Record audit (best-effort) for login. If successfulHost was selected use it, otherwise try localhost
+                            try {
+                                const auditHost = successfulHost || 'http://localhost:3001';
+                                if (auditHost !== 'localFallback') {
+                                    fetch(auditHost.replace(/\/$/, '') + '/api/audit', {
+                                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                                        body: JSON.stringify({ performedBy: user.UserId || null, actionType: 'Login', details: `User ${user.Username || user.Email} logged in` })
+                                    }).catch(e => {/* ignore */});
+                                }
+                            } catch(e) { /* ignore */ }
+                            try {
+                                if ((user.Role || '').toLowerCase() === 'cashier') {
+                                    window.location.href = `${baseUrl}/Cashier/pos.html`;
+                                } else {
+                                    window.location.href = `${baseUrl}/Menubar/Inventory.html`;
+                                }
+                            } catch (redirErr) { console.error('Redirection failed', redirErr); }
+                            return true;
+                        } else {
+                            console.log('Password mismatch for user', user.Username);
+                        }
+                    } else {
+                        console.log('User not found in rows');
+                    }
+                } else {
+                    console.log('No valid JSON rows to search');
+                }
+            } catch (err) {
+                console.warn('performLoginCheck error', err);
+            }
+            return false;
+        };
+
+    try {
             // Try common API hosts in order. If your API runs on port 3001 (default), the first will succeed.
             const apiCandidates = [
                 `${location.protocol}//${location.hostname}:3001`,
@@ -71,47 +129,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 successfulHost = 'localFallback';
             }
 
-            console.log('API rows count:', json && json.rows ? json.rows.length : 'no rows');
-            if (json && json.ok && Array.isArray(json.rows)) {
-                console.log('Searching users for', username);
-                // find user by username or email
-                const user = json.rows.find(u => (u.Username && u.Username.toLowerCase() === username.toLowerCase()) || (u.Email && u.Email.toLowerCase() === username.toLowerCase()));
-                console.log('Found user object:', user);
-                if (user) {
-                    // Validate password by comparing plain text (for demo purposes)
-                    const storedHash = (user.PasswordHash || '').toString().trim();
-                    console.log('Comparing entered password (len)', password.length, 'to stored PasswordHash (trimmed):', storedHash ? `(len ${storedHash.length})` : '(empty)');
-                    if (password === storedHash) {
-                        // Persist current user in localStorage so other pages (nav) can adjust UI
-                        try {
-                            localStorage.setItem('currentUser', JSON.stringify(user));
-                        } catch (e) { console.warn('Could not persist currentUser', e); }
-
-                        const baseUrl = `${location.protocol}//${location.hostname}${location.port ? (':' + location.port) : ''}`;
-                        console.log('Redirecting user:', user.Role);
-                        try {
-                            if ((user.Role || '').toLowerCase() === 'cashier') {
-                                window.location.href = `${baseUrl}/Cashier/pos.html`;
-                            } else {
-                                window.location.href = `${baseUrl}/Menubar/Inventory.html`;
-                            }
-                        } catch (redirErr) {
-                            console.error('Redirection failed', redirErr);
-                        }
-                        return;
-                    } else {
-                        console.log('Password mismatch for user', user.Username);
-                    }
-                } else {
-                    console.log('User not found in rows');
-                }
-            } else {
-                console.log('No valid JSON rows to search');
-            }
+            // Try login using the fetched or fallback data
+            if (performLoginCheck(json)) return;
             alert('Invalid credentials or user not found');
         } catch (e) {
             console.warn('Login API error', e);
-            alert('Login failed: could not reach API. Start the API server (cd server && npm install && npm run start) and try again.');
+            // On any unexpected error talking to the API, use local fallback and try login
+            json = { ok: true, rows: localUsers };
+            console.log('Using local fallback users due to API error');
+            if (performLoginCheck(json)) return;
+            alert('Invalid credentials or user not found');
         }
     });
 });

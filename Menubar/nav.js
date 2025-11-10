@@ -2,7 +2,7 @@
 (function () {
     // Map visible label -> target path (relative to Menubar/)
     const navMap = {
-        'Dashboard': '../Home Page/index.html',
+        'Dashboard': 'DashBoard.html',
         'User': 'User.html',
         'Orders': 'Orders.html',
         'Analytics': 'Analytics.html',
@@ -64,8 +64,18 @@
             if (target && target !== '#') {
                 window.location.href = target;
             } else if (label.toLowerCase().includes('logout')) {
-                // Placeholder: implement logout flow if needed
-                console.log('Logout clicked');
+                // Implement logout: record audit, clear session and redirect to login
+                try {
+                    const currentUser = (function(){ try{ return JSON.parse(localStorage.getItem('currentUser')); }catch(e){return null;} })();
+                    const performedBy = currentUser && currentUser.UserId ? currentUser.UserId : null;
+                    fetch('http://localhost:3001/api/audit', {
+                        method: 'POST', headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ performedBy: performedBy, actionType: 'Logout', details: `User logged out` })
+                    }).catch(e => {/* ignore */});
+                } catch(e) { /* ignore */ }
+                try { localStorage.removeItem('currentUser'); } catch(e){}
+                window.location.href = '../Login/index.html';
+                return;
             }
         });
     });

@@ -158,10 +158,35 @@ function proceedOrder() {
     }
 
     const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    alert(`Order Total: PHP ${total}\n\nOrder has been processed!`);
-    
-    cart = [];
-    renderCart();
+    // Attempt to create a transaction record via API
+    const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+    const payload = {
+        orderId: null,
+        processedBy: performedBy,
+        paymentMethod: 'Cash',
+        amountPaid: total,
+        notes: JSON.stringify({ items: cart })
+    };
+
+    fetch('http://localhost:3001/api/transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    }).then(r => r.json()).then(j => {
+        if (j && j.ok) {
+            alert(`Order Total: PHP ${total}\n\nOrder has been processed!`);
+            cart = [];
+            renderCart();
+        } else {
+            alert('Failed to process order: ' + (j && j.error ? j.error : 'unknown'));
+        }
+    }).catch(e => {
+        console.warn('Transaction API not available', e);
+        // fallback: still clear cart locally
+        alert(`Order Total: PHP ${total}\n\nOrder has been processed (local fallback).`);
+        cart = [];
+        renderCart();
+    });
 }
 
 function searchProducts() {
@@ -192,12 +217,22 @@ document.addEventListener('DOMContentLoaded', function() {
     // Proceed button
     document.getElementById('proceedBtn').addEventListener('click', proceedOrder);
 
-    // Menu items (you can add navigation logic here)
+    // Menu items navigation
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', function() {
-            const menuClass = this.classList[1]; // Get the specific menu class
-            console.log('Clicked:', menuClass);
-            // Add your navigation logic here
+            const text = (this.textContent || '').toLowerCase();
+            if (text.includes('create')) {
+                // already on create order
+                location.href = 'Cashier.html';
+            } else if (text.includes('orders')) {
+                location.href = 'Orders.html';
+            } else if (text.includes('settings')) {
+                location.href = 'Settings.html';
+            } else if (text.includes('logout')) {
+                // clear session and go to login
+                try { localStorage.removeItem('currentUser'); } catch(e){}
+                location.href = '../Login/index.html';
+            }
         });
     });
 });

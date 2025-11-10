@@ -2,9 +2,9 @@ const sql = require('mssql');
 
 // Configuration: use environment variables in production. For local testing, replace with your values.
 const config = {
-  user: process.env.DB_USER || 'sa',
-  password: process.env.DB_PASSWORD || 'YourStrong!Passw0rd',
-  server: process.env.DB_SERVER || 'localhost',
+  user: process.env.DB_USER || 'Inven',
+  password: process.env.DB_PASSWORD || '123',
+  server: process.env.DB_SERVER || 'LAPTOP-OOKDLLNS',
   database: process.env.DB_NAME || 'INVENTORY_SYSTEM_DB',
   options: {
     encrypt: false,
@@ -23,7 +23,11 @@ const poolPromise = new sql.ConnectionPool(config)
     console.log('Connected to SQL Server');
     return pool;
   })
-  .catch(err => console.error('Database Connection Failed!', err));
+  .catch(err => {
+    console.error('Database Connection Failed!', err);
+    // Re-throw so callers awaiting poolPromise receive the rejection
+    throw err;
+  });
 
 module.exports = {
   sql, poolPromise

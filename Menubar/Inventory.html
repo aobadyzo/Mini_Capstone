@@ -181,8 +181,8 @@
                 <input type="text" class="form-input" id="expirationDate" placeholder="MM-YYYY">
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addProduct()">Add Product</button>
             </div>
         </div>
     </div>
@@ -219,8 +219,8 @@
                 </select>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="adjustStock()">Update Stock</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="adjustStock()">Update Stock</button>
             </div>
         </div>
     </div>
@@ -244,8 +244,8 @@
                 <input type="text" class="form-input" id="restockExpiration" placeholder="MM-YYYY (optional)">
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="restockProduct()">Restock</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button id="restockBtn" type="button" class="btn btn-primary" onclick="restockProduct()">Restock</button>
             </div>
         </div>
     </div>
@@ -262,7 +262,9 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Batch Number</label>
-                <input type="text" class="form-input" id="disposalBatchNumber" placeholder="Enter batch number">
+                <select class="form-select" id="disposalBatchNumber">
+                    <option value="">Select a batch</option>
+                </select>
             </div>
             <div class="form-group">
                 <label class="form-label">Quantity to Dispose</label>
@@ -289,8 +291,8 @@
                 <textarea class="form-input" id="disposalNotes" rows="3" placeholder="Optional notes about disposal"></textarea>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="disposeProduct()">Dispose Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="disposeProduct()">Dispose Product</button>
             </div>
         </div>
     </div>

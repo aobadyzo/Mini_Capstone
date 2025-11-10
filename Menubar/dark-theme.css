@@ -180,3 +180,88 @@ body.dark-mode .user-edit-modal .text-wrapper-8 {
 body.dark-mode .role-badge {
   opacity: 0.95;
 }
+
+/* Dashboard-specific dark-mode visual fixes */
+/* 1) Make stat card text clearly white */
+body.dark-mode .stat-card {
+  background: #242424 !important;
+  color: #ffffff !important;
+}
+body.dark-mode .stat-card .stat-title,
+body.dark-mode .stat-card .stat-value,
+body.dark-mode .stat-card .stat-change,
+body.dark-mode .stat-card .stat-card-header .stat-icon {
+  color: #ffffff !important;
+}
+body.dark-mode .stat-change {
+  background: rgba(0,0,0,0.12) !important;
+  color: #e8fff0 !important;
+}
+
+/* 2) Make the orders / tables area dark and text white */
+body.dark-mode .orders-table,
+body.dark-mode .orders-table .table-header,
+body.dark-mode .orders-table .table-body,
+body.dark-mode .orders-table .table-row {
+  background: #0f0f0f !important;
+  color: #f3f3f3 !important;
+}
+body.dark-mode .orders-table .table-header {
+  border-bottom: 1px solid rgba(255,159,159,0.12) !important;
+}
+body.dark-mode .orders-table .table-row div {
+  color: #e6e6e6 !important;
+}
+
+/* 3) Ensure chart containers and pie widget use dark panels */
+body.dark-mode .chart-container,
+body.dark-mode .pie-container,
+body.dark-mode .analytics-grid > .chart-container,
+body.dark-mode .analytics-grid > .pie-container {
+  background: #141414 !important;
+  color: #ffffff !important;
+}
+
+/* Force chart titles, small labels and headings to white in dark mode */
+body.dark-mode .chart-title,
+body.dark-mode .chart-container .chart-title,
+body.dark-mode .pie-container .chart-title,
+body.dark-mode .main-content .header h1,
+body.dark-mode .main-content h1,
+body.dark-mode .main-content h2,
+body.dark-mode .main-content h3 {
+  color: #ffffff !important;
+}
+
+/* Day labels (Sun, Mon...) */
+body.dark-mode .day-label,
+body.dark-mode .day-label * {
+  color: #dcdcdc !important;
+}
+
+/* Ensure grid lines in simple-chart are subtle in dark mode */
+body.dark-mode .grid-line { background: rgba(255,255,255,0.06) !important; border-top-color: rgba(255,255,255,0.06) !important; }
+
+/* 4) Adjust scrollbar/thumb contrast in dark mode for table panels */
+body.dark-mode .orders-table::-webkit-scrollbar,
+body.dark-mode .table-body::-webkit-scrollbar {
+  width: 10px;
+}
+body.dark-mode .orders-table::-webkit-scrollbar-thumb,
+body.dark-mode .table-body::-webkit-scrollbar-thumb {
+  background: rgba(255,159,159,0.35);
+  border-radius: 8px;
+}
+
+/* Make selected / highlighted text readable in dark mode */
+body.dark-mode ::selection,
+body.dark-mode *::selection {
+  background: rgba(59,130,246,0.95); /* vivid blue selection */
+  color: #ffffff !important; /* ensure text is white when selected */
+}
+/* Firefox selection pseudo-element */
+body.dark-mode ::-moz-selection,
+body.dark-mode *::-moz-selection {
+  background: rgba(59,130,246,0.95);
+  color: #ffffff !important;
+}

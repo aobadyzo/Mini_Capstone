@@ -63,6 +63,32 @@ function openDisposalModal() {
     const select = document.getElementById('disposalProductId');
     select.innerHTML = '<option value="">Select a product</option>' + 
         inventory.map(item => `<option value="${item.id}">${item.name} (${item.id}) - Available: ${item.quantity}</option>`).join('');
+    // when product selection changes, populate batch options by querying batches endpoint
+    const batchSelect = document.getElementById('disposalBatchNumber');
+    select.onchange = async function onChange() {
+        const pid = this.value;
+        batchSelect.innerHTML = '<option value="">Select a batch</option>';
+        if (!pid) return;
+        try {
+            const res = await fetch(`http://localhost:3001/api/batches?productId=${encodeURIComponent(pid)}`);
+            const json = await res.json();
+            if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+                // show batch id and on-hand qty + expiration for clarity
+                json.rows.forEach(b => {
+                    const label = `${b.BatchId} — qty:${b.QuantityOnHand || 0}${b.Expiration ? ' — exp:' + b.Expiration : ''}`;
+                    batchSelect.insertAdjacentHTML('beforeend', `<option value="${b.BatchId}">${label}</option>`);
+                });
+            } else {
+                // fallback to product current batchId
+                const prod = inventory.find(i => String(i.id) === String(pid));
+                if (prod && prod.batchId) batchSelect.insertAdjacentHTML('beforeend', `<option value="${prod.batchId}">${prod.batchId}</option>`);
+            }
+        } catch (e) {
+            console.warn('Could not fetch batches for product', e);
+            const prod = inventory.find(i => String(i.id) === String(pid));
+            if (prod && prod.batchId) batchSelect.insertAdjacentHTML('beforeend', `<option value="${prod.batchId}">${prod.batchId}</option>`);
+        }
+    };
     document.getElementById('disposalModal').classList.add('active');
 }
 
@@ -82,49 +108,42 @@ function addProduct() {
     const stockLevel = document.getElementById('stockLevel').value;
     const expiration = document.getElementById('expirationDate').value;
     
-    if (name && id && quantity && expiration) {
-        const today = new Date();
-        const dateAdded = `${String(today.getMonth() + 1).padStart(2, '0')}-${today.getFullYear()}`;
-        
-        inventory.push({
-            id, 
-            name, 
-            quantity: parseInt(quantity), 
-            stockLevel, 
-            expiration, 
-            dateAdded,
-            image: currentProductImage
-        });
-        
-        renderInventory();
-        closeModal();
-        
-        // Clear form
-        document.getElementById('productName').value = '';
-        document.getElementById('productId').value = '';
-        document.getElementById('productQuantity').value = '';
-        document.getElementById('expirationDate').value = '';
-        currentProductImage = null;
-        resetImagePreview();
-        
-        alert('Product added successfully!');
-        // Send to backend API (if running)
-        fetch('http://localhost:3001/api/inventory/add', {
+    // expiration optional now
+    if (name && id && quantity) {
+        // optimistic UI removed: send request to server first, then refresh from DB on success
+        const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+    fetch('http://localhost:3001/api/inventory/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                    name,
-                    description: '',
-                    price: 0.00,
-                    quantity: parseInt(quantity),
-                    imageBase64: currentProductImage,
-                    imageFileName: null,
-                    performedBy: null
+            name,
+            description: '',
+            price: 0.00,
+            quantity: parseInt(quantity),
+            imageBase64: currentProductImage,
+            imageFileName: null,
+            performedBy: performedBy,
+            batchId: null,
+            expiration: expiration
                 })
-        }).then(r => r.json()).then(j => console.log('API addProduct', j)).catch(e => console.warn('API not available', e));
-
-        // Also create an audit log entry (best-effort)
-        sendAudit(null, 'AddUser', `AddProduct: ${id} - ${name}`);
+        }).then(r => r.json()).then(async j => {
+            console.log('API addProduct', j);
+            if (j && j.ok) {
+                await refreshProducts();
+                // Clear form and close modal after refresh
+                document.getElementById('productName').value = '';
+                document.getElementById('productId').value = '';
+                document.getElementById('productQuantity').value = '';
+                document.getElementById('expirationDate').value = '';
+                currentProductImage = null;
+                resetImagePreview();
+                closeModal();
+                alert('Product added successfully!');
+                // Inventory changes are recorded in InventoryHistory; skip audit entry to avoid DB constraint on AuditLogs
+            } else {
+                alert('Failed to add product: ' + (j && j.error ? j.error : 'unknown'));
+            }
+        }).catch(e => { console.warn('API not available', e); alert('Could not reach API to add product.'); });
     } else {
         alert('Please fill in all fields');
     }
@@ -175,15 +194,42 @@ function adjustStock() {
         fetch('http://localhost:3001/api/inventory/adjust', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ productId: id, adjustmentType: adjustmentType, quantity: parseInt(quantity), stockLevel, performedBy: null })
-        }).then(r => r.json()).then(j => console.log('API adjustStock', j)).catch(e => console.warn('API not available', e));
-        // Audit
-        sendAudit(null, 'ChangedPassword', `StockAdjustment: ${id} ${adjustmentType} ${quantity}`);
+        body: JSON.stringify({ productId: id, adjustmentType: adjustmentType, quantity: parseInt(quantity), stockLevel, performedBy: (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })() })
+        }).then(r => r.json()).then(async j => {
+            console.log('API adjustStock', j);
+            if (j && j.ok) {
+                await refreshProducts();
+            }
+        }).catch(e => console.warn('API not available', e));
+    // Inventory history already records adjustments; no separate audit log required here
     }
 }
 
 // Restock Product
-function restockProduct() {
+async function restockProduct() {
+    console.log('restockProduct() called');
+    const btn = document.getElementById('restockBtn');
+    if (btn && btn.dataset.inprogress === '1') {
+        console.log('restock already in progress, ignoring duplicate click');
+        return;
+    }
+    if (btn) {
+        btn.dataset.inprogress = '1';
+        btn.disabled = true;
+        const oldText = btn.textContent;
+        btn.dataset._oldText = oldText;
+        btn.textContent = 'Restocking...';
+        // safety fallback: if something goes wrong, restore button after 12s
+        const t = setTimeout(() => {
+            try {
+                btn.dataset.inprogress = '0';
+                btn.disabled = false;
+                btn.textContent = btn.dataset._oldText || 'Restock';
+                delete btn.dataset._oldText;
+            } catch(e){}
+        }, 12000);
+        btn.dataset._timer = t;
+    }
     const id = document.getElementById('restockProductSelect').value;
     const quantity = parseInt(document.getElementById('restockQuantity').value);
     const expiration = document.getElementById('restockExpiration').value;
@@ -225,14 +271,40 @@ function restockProduct() {
         
         alert(`Successfully restocked ${quantity} units of ${item.name}`);
 
-        // Notify backend
-        fetch('http://localhost:3001/api/inventory/restock', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId: id, quantity: parseInt(quantity), expiration: expiration, performedBy: null, batchId: null })
-        }).then(r => r.json()).then(j => console.log('API restock', j)).catch(e => console.warn('API not available', e));
-        // Audit
-        sendAudit(null, 'EditUser', `Restock: ${id} +${quantity} (exp:${expiration || 'n/a'})`);
+        // Notify backend (await so we avoid race/double-click problems)
+        const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+        try {
+            const res = await fetch('http://localhost:3001/api/inventory/restock', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ productId: id, quantity: parseInt(quantity), expiration: expiration, performedBy: performedBy, batchId: null })
+            });
+            const j = await res.json().catch(()=>null);
+            console.log('API restock', j || res.status);
+            if (j && j.ok) {
+                await refreshProducts();
+            } else if (!j) {
+                console.warn('Restock response not JSON', res.status);
+            }
+        } catch (e) {
+            console.warn('API not available', e);
+            alert('Could not reach API to restock product.');
+        } finally {
+            // Inventory history already records restocks; skip audit call to prevent AuditLogs CHECK constraint errors
+            console.log('restockProduct() finally block executing');
+            if (btn) {
+                btn.dataset.inprogress = '0';
+                btn.disabled = false;
+                // restore text safely
+                btn.textContent = btn.dataset._oldText || 'Restock';
+                try { delete btn.dataset._oldText; } catch(e){}
+                // clear any fallback timer
+                if (btn.dataset._timer) {
+                    clearTimeout(btn.dataset._timer);
+                    delete btn.dataset._timer;
+                }
+            }
+        }
     }
 }
 
@@ -244,88 +316,50 @@ function disposeProduct() {
     const reason = document.getElementById('disposalReason').value;
     const otherReason = document.getElementById('disposalOtherReason').value;
     const notes = document.getElementById('disposalNotes').value;
-    
-    if (!id) {
-        alert('Please select a product');
-        return;
-    }
-    
-    if (!batchNumber || !batchNumber.trim()) {
-        alert('Please enter a batch number');
-        return;
-    }
-    
-    if (!quantity || quantity <= 0) {
-        alert('Please enter a valid quantity to dispose');
-        return;
-    }
-    
-    if (!reason) {
-        alert('Please select a reason for disposal');
-        return;
-    }
-    
-    if (reason === 'other' && (!otherReason || !otherReason.trim())) {
-        alert('Please specify the reason for disposal');
-        return;
-    }
-    
-    const item = inventory.find(i => i.id === id);
-    if (item) {
-        if (quantity > item.quantity) {
-            alert(`Cannot dispose ${quantity} units. Only ${item.quantity} available.`);
-            return;
-        }
-        
-        // Record disposal in history
-        const disposalRecord = {
-            productId: id,
-            productName: item.name,
-            batchNumber: batchNumber,
-            quantity: quantity,
-            reason: reason === 'other' ? otherReason : reason,
-            notes: notes,
-            date: new Date().toLocaleDateString(),
-            timestamp: new Date().toISOString()
-        };
-        
-        disposalHistory.push(disposalRecord);
-        
-        // Reduce inventory quantity
-        item.quantity -= quantity;
-        
-        // Update stock level
-        if (item.quantity < 20) {
-            item.stockLevel = 'low';
-        } else if (item.quantity < 50) {
-            item.stockLevel = 'medium';
-        } else {
-            item.stockLevel = 'high';
-        }
-        
-        renderInventory();
-        closeModal();
-        
-        // Clear form
-        document.getElementById('disposalBatchNumber').value = '';
-        document.getElementById('disposalQuantity').value = '';
-        document.getElementById('disposalReason').value = '';
-        document.getElementById('disposalOtherReason').value = '';
-        document.getElementById('disposalNotes').value = '';
-        
-        alert(`Successfully disposed ${quantity} units of ${item.name}\nBatch: ${batchNumber}\nReason: ${disposalRecord.reason}`);
-        
-        console.log('Disposal History:', disposalHistory);
 
-        // Notify backend
-        fetch('http://localhost:3001/api/inventory/dispose', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ productId: id, batchId: batchNumber, quantity: quantity, reason: disposalRecord.reason, notes: notes, performedBy: null })
-        }).then(r => r.json()).then(j => console.log('API dispose', j)).catch(e => console.warn('API not available', e));
-        // Audit
-        sendAudit(null, 'ChangedPassword', `Dispose: ${id} -${quantity} (batch:${batchNumber})`);
-    }
+    if (!id) { alert('Please select a product'); return; }
+    if (!batchNumber || !batchNumber.trim()) { alert('Please enter a batch number'); return; }
+    if (!quantity || quantity <= 0) { alert('Please enter a valid quantity to dispose'); return; }
+
+    const item = inventory.find(i => i.id === id);
+    if (!item) { alert('Product not found'); return; }
+    if (quantity > item.quantity) { alert(`Cannot dispose ${quantity} units. Only ${item.quantity} available.`); return; }
+
+    const disposalRecord = {
+        productId: id,
+        productName: item.name,
+        batchNumber: batchNumber,
+        quantity: quantity,
+        reason: reason === 'other' ? otherReason : reason,
+        notes: notes,
+        date: new Date().toLocaleDateString(),
+        timestamp: new Date().toISOString()
+    };
+
+    const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
+    fetch('http://localhost:3001/api/inventory/dispose', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ productId: id, batchId: batchNumber, quantity: quantity, reason: disposalRecord.reason, notes: notes, performedBy: performedBy })
+    }).then(r => r.json()).then(async j => {
+        console.log('API dispose', j);
+        if (j && j.ok) {
+            disposalHistory.push(disposalRecord);
+            await refreshProducts();
+            // Clear form and close
+            document.getElementById('disposalBatchNumber').value = '';
+            document.getElementById('disposalQuantity').value = '';
+            document.getElementById('disposalReason').value = '';
+            document.getElementById('disposalOtherReason').value = '';
+            document.getElementById('disposalNotes').value = '';
+            closeModal();
+            alert(`Successfully disposed ${quantity} units of ${item.name}\nBatch: ${batchNumber}\nReason: ${disposalRecord.reason}`);
+            console.log('Disposal History:', disposalHistory);
+            // Inventory history already records disposals; skip audit call to prevent AuditLogs CHECK constraint errors
+        } else {
+            alert('Failed to dispose product: ' + (j && j.error ? j.error : 'unknown'));
+        }
+    }).catch(e => { console.warn('API not available', e); alert('Could not reach API to dispose product.'); });
 }
 
 // --- Navigation and audit helper ---
@@ -419,13 +453,14 @@ document.querySelectorAll('.modal').forEach(modal => {
         if (json && json.ok && Array.isArray(json.rows)) {
             // Map DB products to inventory shape used by UI
             inventory = json.rows.map(p => ({
-                id: p.ProductId || String(p.ProductId),
-                name: p.Name || 'Product',
-                quantity: p.QuantityOnHand || 0,
-                stockLevel: (p.QuantityOnHand < 20) ? 'low' : (p.QuantityOnHand < 50) ? 'medium' : 'high',
-                expiration: null,
+            id: String(p.ProductId),
+            name: p.Name || 'Product',
+            quantity: p.QuantityOnHand || 0,
+            stockLevel: (p.QuantityOnHand < 20) ? 'low' : (p.QuantityOnHand < 50) ? 'medium' : 'high',
+            expiration: p.Expiration || null,
+            batchId: p.BatchId || null,
                 dateAdded: p.CreatedAt ? new Date(p.CreatedAt).toLocaleDateString() : '',
-                image: null
+                image: p.ImageData || null
             }));
             renderInventory(inventory);
             return;
@@ -437,3 +472,28 @@ document.querySelectorAll('.modal').forEach(modal => {
     // fallback
     renderInventory();
 })();
+
+// Helper to refresh products from API and re-render; used after successful backend ops
+async function refreshProducts() {
+    try {
+        const res = await fetch('http://localhost:3001/api/products');
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.rows)) {
+            inventory = json.rows.map(p => ({
+                id: String(p.ProductId),
+                name: p.Name || 'Product',
+                quantity: p.QuantityOnHand || 0,
+                stockLevel: (p.QuantityOnHand < 20) ? 'low' : (p.QuantityOnHand < 50) ? 'medium' : 'high',
+                expiration: p.Expiration || null,
+                batchId: p.BatchId || null,
+                dateAdded: p.CreatedAt ? new Date(p.CreatedAt).toLocaleDateString() : '',
+                image: p.ImageData || null
+            }));
+            renderInventory(inventory);
+            return true;
+        }
+    } catch (e) {
+        console.warn('Products API not available when refreshing', e);
+    }
+    return false;
+}
