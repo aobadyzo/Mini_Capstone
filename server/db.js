@@ -1,6 +1,4 @@
-const sql = require('mssql');
-
-// Configuration: use environment variables in production. For local testing, replace with your values.
+const sql = require('mssql');
 const config = {
   user: process.env.DB_USER || 'Inven',
   password: process.env.DB_PASSWORD || '123',
@@ -24,8 +22,7 @@ const poolPromise = new sql.ConnectionPool(config)
     return pool;
   })
   .catch(err => {
-    console.error('Database Connection Failed!', err);
-    // Re-throw so callers awaiting poolPromise receive the rejection
+    console.error('Database Connection Failed!', err);
     throw err;
   });
 

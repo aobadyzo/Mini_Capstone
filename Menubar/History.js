@@ -1,4 +1,4 @@
-// Tab configuration with headers
+
 const tabConfig = {
     'Audit Logs': {
         headers: ['LOG ID', 'PERFORMED BY', 'ACTION TYPE', 'DATE PERFORMED'],
@@ -19,31 +19,21 @@ const tabConfig = {
 
 const tableHeader = document.getElementById('tableHeader');
 const tabs = document.querySelectorAll('.tab');
-const contentSections = document.querySelectorAll('.content-section');
-
-// Tab functionality
+const contentSections = document.querySelectorAll('.content-section');
 tabs.forEach(tab => {
     tab.addEventListener('click', function() {
         const tabName = this.textContent;
-        const config = tabConfig[tabName];
-
-        // Update active tab
+        const config = tabConfig[tabName];
         tabs.forEach(t => t.classList.remove('active'));
-        this.classList.add('active');
-
-        // Update table headers
+        this.classList.add('active');
         if (config) {
             tableHeader.innerHTML = config.headers.map(h => `<div>${h}</div>`).join('');
-            tableHeader.className = 'table-header ' + config.class;
-
-            // Show corresponding content
+            tableHeader.className = 'table-header ' + config.class;
             contentSections.forEach(section => section.classList.remove('active'));
             document.getElementById(config.contentId).classList.add('active');
         }
     });
-});
-
-// Search functionality
+});
 const searchInput = document.getElementById('searchInput');
 searchInput.addEventListener('input', function() {
     const searchTerm = this.value.toLowerCase();
@@ -58,24 +48,16 @@ searchInput.addEventListener('input', function() {
             row.style.display = 'none';
         }
     });
-});
-
-// Navigation
+});
 const navItems = document.querySelectorAll('.nav-item');
 navItems.forEach(item => {
-    item.addEventListener('click', function() {
-        // Remove active from all
-        navItems.forEach(nav => nav.classList.remove('active'));
-        // Add active to clicked
+    item.addEventListener('click', function() {
+        navItems.forEach(nav => nav.classList.remove('active'));
         this.classList.add('active');
     });
-});
-
-// Initialize with Audit Logs headers
+});
 const initialConfig = tabConfig['Audit Logs'];
-tableHeader.className = 'table-header ' + initialConfig.class;
-
-// When a tab becomes active, fetch logs from backend (if available)
+tableHeader.className = 'table-header ' + initialConfig.class;
 tabs.forEach(tab => {
     tab.addEventListener('click', async function() {
         const tabName = this.textContent;
@@ -93,8 +75,7 @@ tabs.forEach(tab => {
                 const json = await res.json();
                 if (json.ok) renderInventoryLogRows(json.rows);
             }
-        } catch (e) {
-            // Backend not available - keep using static content
+        } catch (e) {
             console.warn('Logs API not available', e);
         }
     });

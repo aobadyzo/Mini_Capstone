@@ -17,9 +17,7 @@ async function loadProducts(){
         const price = p.Price || 0;
         const pid = p.ProductId || '';
         return `<div class="product-card"><div class="name">${p.Name}</div><div class="price">${formatCurrency(price)}</div><div class="qty">Stock: ${p.QuantityOnHand||0}</div><button data-id="${pid}" data-price="${price}">Add</button></div>`;
-      }).join('');
-
-      // attach handlers
+      }).join('');
       container.querySelectorAll('button[data-id]').forEach(btn=>{
         btn.addEventListener('click', ()=>{
           const id = btn.getAttribute('data-id');
@@ -63,7 +61,5 @@ if (placeBtn) {
       else alert('Failed to record order');
     } catch (e) { console.warn('Transaction API failed', e); alert('Transaction failed'); }
   });
-}
-
-// initialize
+}
 document.addEventListener('DOMContentLoaded', ()=>{ loadProducts(); renderCart(); });

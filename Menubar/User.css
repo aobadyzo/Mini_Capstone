@@ -19,7 +19,7 @@ body {
     padding: 20px;
 }
 
-/* Sidebar */
+
 .sidebar {
     width: 200px;
     padding: 20px;
@@ -134,7 +134,7 @@ body {
     to { width: 100%; }
 }
 
-/* Main Content */
+
 .main-content {
     flex: 1;
     padding: 20px 40px;
@@ -227,7 +227,7 @@ body {
     transform: rotate(-45deg);
 }
 
-/* Table */
+
 .table-container {
     margin-top: 20px;
     animation: fadeIn 0.8s ease-out 0.6s both;
@@ -311,7 +311,7 @@ body {
     color: #f57c00;
 }
 
-/* Add Account Button */
+
 .add-account-btn {
     display: flex;
     align-items: center;
@@ -339,7 +339,7 @@ body {
     font-size: 24px;
 }
 
-/* Edit Modal - Matching your exact CSS structure */
+
 .user-edit-modal {
     display: none;
     position: fixed;
@@ -441,7 +441,7 @@ body {
     color: #666;
 }
 
-/* Profile Picture Section */
+
 .profile-picture-section {
     position: absolute;
     top: 70px;
@@ -479,7 +479,7 @@ body {
     white-space: nowrap;
 }
 
-/* Download Icon */
+
 .download-icon {
     position: absolute;
     top: 25px;
@@ -506,7 +506,7 @@ body {
     color: white;
 }
 
-/* Edit Icon */
+
 .edit-icon {
     position: absolute;
     top: 75px;
@@ -533,7 +533,7 @@ body {
     color: white;
 }
 
-/* ID and Role Section */
+
 .id-role-section {
     position: absolute;
     top: 75px;
@@ -593,11 +593,11 @@ body {
 }
 
 .user-edit-modal .divider {
-    /* removed: visual divider line — hidden per user request */
+    
     display: none !important;
 }
 
-/* Form Fields */
+
 .form-fields {
     position: absolute;
     top: 225px;
@@ -655,10 +655,10 @@ body {
     width: 680px;
 }
 
-/* Button Section */
+
 .button-section {
     position: absolute;
-    /* moved up a bit to sit higher inside the modal */
+    
     bottom: 95px;
     left: 60px;
 }

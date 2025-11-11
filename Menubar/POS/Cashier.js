@@ -1,4 +1,4 @@
-// Sample products data
+
 let products = [
     { id: 1, name: 'Product 1', price: 150, image: '' },
     { id: 2, name: 'Product 2', price: 250, image: '' },
@@ -10,9 +10,7 @@ let products = [
 
 let cart = [];
 let selectedProduct = null;
-let editingProductId = null;
-
-// Render products to the grid
+let editingProductId = null;
 function renderProducts() {
     const grid = document.getElementById('productsGrid');
     grid.innerHTML = '';
@@ -30,18 +28,14 @@ function renderProducts() {
         `;
 
         grid.appendChild(productDiv);
-    });
-
-    // Add event listeners to all product price buttons
+    });
     document.querySelectorAll('.product-price-btn').forEach(button => {
         button.addEventListener('click', function() {
             const productId = parseInt(this.getAttribute('data-product-id'));
             openQuantityModal(productId);
         });
     });
-}
-
-// Edit product name
+}
 function editProductName(productId) {
     editingProductId = productId;
     const product = products.find(p => p.id === productId);
@@ -64,9 +58,7 @@ function confirmEditName() {
         }
     }
     closeEditNameModal();
-}
-
-// Quantity modal functions
+}
 function openQuantityModal(productId) {
     selectedProduct = products.find(p => p.id === productId);
     document.getElementById('quantityInput').value = 1;
@@ -107,9 +99,7 @@ function confirmAddToCart() {
 
     renderCart();
     closeQuantityModal();
-}
-
-// Render cart items
+}
 function renderCart() {
     const cartContainer = document.getElementById('cartItems');
     cartContainer.innerHTML = '';
@@ -135,9 +125,7 @@ function renderCart() {
         `;
 
         cartContainer.appendChild(cartItemDiv);
-    });
-
-    // Add event listeners to remove buttons
+    });
     document.querySelectorAll('.remove-btn').forEach(button => {
         button.addEventListener('click', function() {
             const productId = parseInt(this.getAttribute('data-product-id'));
@@ -157,8 +145,7 @@ function proceedOrder() {
         return;
     }
 
-    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    // Attempt to create a transaction record via API
+    const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
     const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
     const payload = {
         orderId: null,
@@ -181,8 +168,7 @@ function proceedOrder() {
             alert('Failed to process order: ' + (j && j.error ? j.error : 'unknown'));
         }
     }).catch(e => {
-        console.warn('Transaction API not available', e);
-        // fallback: still clear cart locally
+        console.warn('Transaction API not available', e);
         alert(`Order Total: PHP ${total}\n\nOrder has been processed (local fallback).`);
         cart = [];
         renderCart();
@@ -191,45 +177,29 @@ function proceedOrder() {
 
 function searchProducts() {
     const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-    console.log('Searching for:', searchTerm);
-    // You can implement filtering logic here
-}
-
-// Event listeners
-document.addEventListener('DOMContentLoaded', function() {
-    // Initialize
+    console.log('Searching for:', searchTerm);
+}
+document.addEventListener('DOMContentLoaded', function() {
     renderProducts();
-    renderCart();
-
-    // Search input
-    document.getElementById('searchInput').addEventListener('input', searchProducts);
-
-    // Quantity modal buttons
+    renderCart();
+    document.getElementById('searchInput').addEventListener('input', searchProducts);
     document.getElementById('incrementBtn').addEventListener('click', incrementQuantity);
     document.getElementById('decrementBtn').addEventListener('click', decrementQuantity);
     document.getElementById('confirmAddBtn').addEventListener('click', confirmAddToCart);
-    document.getElementById('cancelQuantityBtn').addEventListener('click', closeQuantityModal);
-
-    // Edit name modal buttons
+    document.getElementById('cancelQuantityBtn').addEventListener('click', closeQuantityModal);
     document.getElementById('confirmEditBtn').addEventListener('click', confirmEditName);
-    document.getElementById('cancelEditBtn').addEventListener('click', closeEditNameModal);
-
-    // Proceed button
-    document.getElementById('proceedBtn').addEventListener('click', proceedOrder);
-
-    // Menu items navigation
+    document.getElementById('cancelEditBtn').addEventListener('click', closeEditNameModal);
+    document.getElementById('proceedBtn').addEventListener('click', proceedOrder);
     document.querySelectorAll('.menu-item').forEach(item => {
         item.addEventListener('click', function() {
             const text = (this.textContent || '').toLowerCase();
-            if (text.includes('create')) {
-                // already on create order
+            if (text.includes('create')) {
                 location.href = 'Cashier.html';
             } else if (text.includes('orders')) {
                 location.href = 'Orders.html';
             } else if (text.includes('settings')) {
                 location.href = 'Settings.html';
-            } else if (text.includes('logout')) {
-                // clear session and go to login
+            } else if (text.includes('logout')) {
                 try { localStorage.removeItem('currentUser'); } catch(e){}
                 location.href = '../Login/index.html';
             }

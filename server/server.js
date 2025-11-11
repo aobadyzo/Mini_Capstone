@@ -6,19 +6,13 @@ const { poolPromise, sql } = require('./db');
 const app = express();
 app.use(cors());
 app.use(bodyParser.json({ limit: '10mb' }));
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Helper: generate a short batch id when none provided. Format: B-<timestamp>-<4hex>
+app.use(bodyParser.urlencoded({ extended: true }));
 function generateBatchId() {
   const ts = Date.now();
   const rnd = Math.floor(Math.random() * 0xffff).toString(16).toUpperCase().padStart(4, '0');
   return `B-${ts}-${rnd}`;
-}
-
-// Simple health
-app.get('/api/health', (req, res) => res.json({ ok: true }));
-
-// Add product endpoint
+}
+app.get('/api/health', (req, res) => res.json({ ok: true }));
 app.post('/api/inventory/add', async (req, res) => {
   const { name, description, price, quantity, imageBase64, imageFileName, performedBy, batchId, expiration } = req.body;
   try {
@@ -29,8 +23,7 @@ app.post('/api/inventory/add', async (req, res) => {
     request.input('Name', sql.NVarChar(255), name);
     request.input('Description', sql.NVarChar(sql.MAX), description);
     request.input('Price', sql.Decimal(18,2), price || 0.00);
-    request.input('QuantityOnHand', sql.Int, quantity || 0);
-    // ensure we have a batch id; generate one server-side when not provided
+    request.input('QuantityOnHand', sql.Int, quantity || 0);
     const batchVal = (batchId && String(batchId).trim()) ? batchId : generateBatchId();
     request.input('BatchId', sql.NVarChar(100), batchVal);
     request.input('Expiration', sql.NVarChar(50), expiration || null);
@@ -40,11 +33,8 @@ app.post('/api/inventory/add', async (req, res) => {
       VALUES (@Name, @Description, @Price, @QuantityOnHand, @BatchId, @Expiration, SYSUTCDATETIME());`;
 
     const result = await request.query(insertProduct);
-    const productId = result.recordset[0].ProductId;
-
-    // If an image was provided as data URL or base64, store as VARBINARY(MAX)
-    if (imageBase64) {
-      // imageBase64 may be data URL like 'data:image/png;base64,...' or raw base64
+    const productId = result.recordset[0].ProductId;
+    if (imageBase64) {
       let base64 = imageBase64;
       let contentType = null;
       const commaIndex = base64.indexOf(',');
@@ -64,9 +54,7 @@ app.post('/api/inventory/add', async (req, res) => {
       imgReq.input('IsPrimary', sql.Bit, 1);
       await imgReq.query(`INSERT INTO dbo.ProductImages (ProductId, FileName, ContentType, ImageData, FilePath, IsPrimary, CreatedAt)
         VALUES (@ProductId, @FileName, @ContentType, @ImageData, NULL, @IsPrimary, SYSUTCDATETIME());`);
-    }
-
-    // Insert inventory history record
+    }
     const histReq = tx.request();
     histReq.input('ProductId', sql.Int, productId);
     histReq.input('PerformedByUserId', sql.Int, performedBy || null);
@@ -84,9 +72,7 @@ app.post('/api/inventory/add', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Adjust stock
+});
 app.post('/api/inventory/adjust', async (req, res) => {
   const { productId, adjustmentType, quantity, stockLevel, performedBy } = req.body;
   try {
@@ -108,9 +94,7 @@ app.post('/api/inventory/adjust', async (req, res) => {
     const updReq = tx.request();
     updReq.input('ProductId', sql.Int, productId);
     updReq.input('NewQty', sql.Int, newQty);
-    await updReq.query('UPDATE dbo.Products SET QuantityOnHand = @NewQty, UpdatedAt = SYSUTCDATETIME() WHERE ProductId = @ProductId');
-
-    // Insert history
+    await updReq.query('UPDATE dbo.Products SET QuantityOnHand = @NewQty, UpdatedAt = SYSUTCDATETIME() WHERE ProductId = @ProductId');
     const histReq = tx.request();
     histReq.input('ProductId', sql.Int, productId);
     histReq.input('PerformedByUserId', sql.Int, performedBy || null);
@@ -127,9 +111,7 @@ app.post('/api/inventory/adjust', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Restock
+});
 app.post('/api/inventory/restock', async (req, res) => {
   const { productId, quantity, expiration, performedBy, batchId } = req.body;
   try {
@@ -144,12 +126,8 @@ app.post('/api/inventory/restock', async (req, res) => {
 
 
     const currentQty = productRes.recordset[0].QuantityOnHand;
-    const newQty = currentQty + parseInt(quantity);
-
-    // determine batch id for this restock (generate server-side when not provided)
-    const batchVal = (batchId && String(batchId).trim()) ? batchId : generateBatchId();
-
-    // Insert a new batch record for this restock and track per-batch quantity
+    const newQty = currentQty + parseInt(quantity);
+    const batchVal = (batchId && String(batchId).trim()) ? batchId : generateBatchId();
     const batchReq = tx.request();
     batchReq.input('BatchId', sql.NVarChar(100), batchVal);
     batchReq.input('ProductId', sql.Int, productId);
@@ -157,9 +135,7 @@ app.post('/api/inventory/restock', async (req, res) => {
     batchReq.input('QuantityOnHand', sql.Int, parseInt(quantity));
     batchReq.input('Expiration', sql.NVarChar(50), expiration || null);
     await batchReq.query(`INSERT INTO dbo.Batches (BatchId, ProductId, QuantityReceived, QuantityOnHand, Expiration, DateAdded, CreatedAt)
-      VALUES (@BatchId, @ProductId, @QuantityReceived, @QuantityOnHand, @Expiration, SYSUTCDATETIME(), SYSUTCDATETIME());`);
-
-    // Only update product total quantity; do NOT overwrite product-level BatchId/Expiration so older batch info remains intact
+      VALUES (@BatchId, @ProductId, @QuantityReceived, @QuantityOnHand, @Expiration, SYSUTCDATETIME(), SYSUTCDATETIME());`);
     const updReq = tx.request();
     updReq.input('ProductId', sql.Int, productId);
     updReq.input('NewQty', sql.Int, newQty);
@@ -168,8 +144,7 @@ app.post('/api/inventory/restock', async (req, res) => {
     const histReq = tx.request();
     histReq.input('ProductId', sql.Int, productId);
     histReq.input('PerformedByUserId', sql.Int, performedBy || null);
-  histReq.input('BatchId', sql.NVarChar(100), batchVal || null);
-    // store expiration as the same short string used by the frontend (e.g. '12-2026')
+  histReq.input('BatchId', sql.NVarChar(100), batchVal || null);
     histReq.input('Expiration', sql.NVarChar(50), expiration || '');
     histReq.input('ActionType', sql.NVarChar(50), 'Restock');
     histReq.input('QuantityChange', sql.Int, parseInt(quantity));
@@ -183,9 +158,7 @@ app.post('/api/inventory/restock', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Dispose product
+});
 app.post('/api/inventory/dispose', async (req, res) => {
   const { productId, batchId, quantity, reason, notes, performedBy } = req.body;
   try {
@@ -199,9 +172,7 @@ app.post('/api/inventory/dispose', async (req, res) => {
     if (productRes.recordset.length === 0) throw new Error('Product not found');
 
     const currentQty = productRes.recordset[0].QuantityOnHand;
-    if (parseInt(quantity) > currentQty) throw new Error('Insufficient total product quantity to dispose');
-
-    // If a specific batch was provided, decrement that batch's on-hand quantity as well
+    if (parseInt(quantity) > currentQty) throw new Error('Insufficient total product quantity to dispose');
     if (batchId && String(batchId).trim()) {
       const bReq = tx.request();
       bReq.input('BatchId', sql.NVarChar(100), batchId);
@@ -241,9 +212,7 @@ app.post('/api/inventory/dispose', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Audit log endpoint
+});
 app.post('/api/audit', async (req, res) => {
   const { performedBy, actionType, details } = req.body;
   try {
@@ -259,9 +228,7 @@ app.post('/api/audit', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Transaction log endpoint
+});
 app.post('/api/transaction', async (req, res) => {
   const { orderId, processedBy, paymentMethod, amountPaid, notes } = req.body;
   try {
@@ -279,9 +246,7 @@ app.post('/api/transaction', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Simple fetch logs endpoints for History page
+});
 app.get('/api/logs/inventory', async (req, res) => {
   try {
     const pool = await poolPromise;
@@ -291,9 +256,7 @@ app.get('/api/logs/inventory', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Get batches for a product (for Inventory batch selection)
+});
 app.get('/api/batches', async (req, res) => {
   try {
     const productId = parseInt(req.query.productId);
@@ -330,22 +293,17 @@ app.get('/api/logs/transactions', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Get products (for Inventory frontend)
+});
 app.get('/api/products', async (req, res) => {
   try {
-    const pool = await poolPromise;
-  // Include primary image (if any) in the product rows to simplify frontend rendering
+    const pool = await poolPromise;
   const result = await pool.request().query(`
     SELECT p.ProductId, p.Name, p.Description, p.Price, p.QuantityOnHand, p.BatchId, p.Expiration, p.CreatedAt, p.UpdatedAt,
            pi.FileName AS ImageFileName, pi.ContentType AS ImageContentType, pi.ImageData
     FROM dbo.Products p
     LEFT JOIN dbo.ProductImages pi ON pi.ProductId = p.ProductId AND pi.IsPrimary = 1
     ORDER BY p.CreatedAt DESC
-  `);
-
-    // Convert ImageData (Buffer) to data URL base64 if present
+  `);
     const rows = result.recordset.map(r => {
       const out = Object.assign({}, r);
       try {
@@ -367,14 +325,10 @@ app.get('/api/products', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Get orders (for Orders frontend)
+});
 app.get('/api/orders', async (req, res) => {
   try {
-    const pool = await poolPromise;
-    // Align with database schema: Orders table may have different column names depending on schema version.
-    // Return a stable shape expected by the frontend by aliasing/mapping available columns.
+    const pool = await poolPromise;
     const result = await pool.request().query(`SELECT TOP (1000) 
       OrderId,
       OrderNumber,
@@ -391,14 +345,10 @@ app.get('/api/orders', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Get users (for Settings/Login admin views)
+});
 app.get('/api/users', async (req, res) => {
   try {
-    const pool = await poolPromise;
-    // Users table in schema uses FullName; older code expected FirstName/LastName.
-    // Select FullName and map to FirstName/LastName in JS to avoid SQL errors.
+    const pool = await poolPromise;
     const result = await pool.request().query(`SELECT UserId, Username, FullName, Email, Role, PasswordHash, CreatedAt FROM dbo.Users ORDER BY CreatedAt DESC`);
     const rows = result.recordset.map(r => {
       const full = r.FullName || '';
@@ -413,17 +363,13 @@ app.get('/api/users', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Create new user
+});
 app.post('/api/users', async (req, res) => {
   let { username, firstName, lastName, email, role, performedBy, password } = req.body;
   try {
     const pool = await poolPromise;
-    const fullName = `${(firstName||'').toString().trim()} ${(lastName||'').toString().trim()}`.trim();
-    // If username not provided, default to first name (lowercased)
-    if (!username || !String(username).trim()) username = (firstName || '').toString().trim();
-    // If no password provided, set role-based defaults (plain text to match current login behavior)
+    const fullName = `${(firstName||'').toString().trim()} ${(lastName||'').toString().trim()}`.trim();
+    if (!username || !String(username).trim()) username = (firstName || '').toString().trim();
     if (!password) {
       const rrole = (role || '').toString().toLowerCase();
       if (rrole === 'admin') password = 'admin123';
@@ -435,16 +381,13 @@ app.post('/api/users', async (req, res) => {
     r.input('Username', sql.NVarChar(100), username || null);
     r.input('FullName', sql.NVarChar(255), fullName || null);
     r.input('Email', sql.NVarChar(255), email || null);
-    r.input('Role', sql.NVarChar(50), role || null);
-    // Store password as-is to match existing client-side comparison (not secure; consider hashing)
+    r.input('Role', sql.NVarChar(50), role || null);
     r.input('PasswordHash', sql.NVarChar(sql.MAX), password || null);
     const insert = `INSERT INTO dbo.Users (Username, FullName, Email, Role, PasswordHash, CreatedAt)
       OUTPUT INSERTED.UserId
       VALUES (@Username, @FullName, @Email, @Role, @PasswordHash, SYSUTCDATETIME());`;
     const result = await r.query(insert);
-    const userId = result.recordset[0].UserId;
-
-    // Audit log: AddUser
+    const userId = result.recordset[0].UserId;
     try {
       const a = pool.request();
       a.input('PerformedByUserId', sql.Int, performedBy || null);
@@ -458,9 +401,7 @@ app.post('/api/users', async (req, res) => {
     console.error(err);
     res.status(500).json({ ok: false, error: err.message });
   }
-});
-
-// Update existing user
+});
 app.put('/api/users/:id', async (req, res) => {
   const userIdParam = parseInt(req.params.id);
   const { firstName, lastName, email, role, performedBy, username, newPassword } = req.body;
@@ -473,15 +414,12 @@ app.put('/api/users/:id', async (req, res) => {
     u.input('Email', sql.NVarChar(255), email || null);
     u.input('Role', sql.NVarChar(50), role || null);
     u.input('Username', sql.NVarChar(100), username || null);
-    if (newPassword) {
-      // update including password
+    if (newPassword) {
       u.input('PasswordHash', sql.NVarChar(sql.MAX), newPassword);
       await u.query(`UPDATE dbo.Users SET FullName = @FullName, Email = @Email, Role = @Role, Username = @Username, PasswordHash = @PasswordHash, UpdatedAt = SYSUTCDATETIME() WHERE UserId = @UserId`);
     } else {
       await u.query(`UPDATE dbo.Users SET FullName = @FullName, Email = @Email, Role = @Role, Username = @Username, UpdatedAt = SYSUTCDATETIME() WHERE UserId = @UserId`);
-    }
-
-    // Audit log: EditUser
+    }
     try {
       const a = pool.request();
       a.input('PerformedByUserId', sql.Int, performedBy || null);

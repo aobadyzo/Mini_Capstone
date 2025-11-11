@@ -19,7 +19,7 @@ body {
     padding: 20px;
 }
 
-/* Sidebar */
+
 .sidebar {
     width: 200px;
     padding: 20px;
@@ -134,7 +134,7 @@ body {
     to { width: 100%; }
 }
 
-/* Main Content */
+
 .main-content {
     flex: 1;
     padding: 20px 40px;
@@ -222,7 +222,7 @@ body {
     transform: rotate(-45deg);
 }
 
-/* Table */
+
 .table-container {
     margin-top: 20px;
     animation: fadeIn 0.8s ease-out 0.6s both;
@@ -361,7 +361,7 @@ body {
     transform: rotate(90deg) scale(1.1);
 }
 
-/* Action Buttons */
+
 .action-buttons {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -438,7 +438,7 @@ body {
     50% { transform: translateY(-10px); }
 }
 
-/* Scrollbar */
+
 .table-container::-webkit-scrollbar {
     width: 12px;
 }
@@ -458,13 +458,13 @@ body {
     background: linear-gradient(180deg, #ff6b6b 0%, #ff5252 50%, #ff3838 100%);
 }
 
-/* Firefox scrollbar */
+
 .table-container {
     scrollbar-width: thin;
     scrollbar-color: #f59d9d transparent;
 }
 
-/* Image Upload Styles */
+
 .image-upload-container {
     margin-bottom: 10px;
 }
@@ -527,7 +527,7 @@ body {
     font-size: 16px;
 }
 
-/* Modal */
+
 .modal {
     display: none;
     position: fixed;

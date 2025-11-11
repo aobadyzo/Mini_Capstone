@@ -1,34 +1,24 @@
-// Analytics Dashboard JavaScript
 
-document.addEventListener('DOMContentLoaded', async function() {
-  // Menu item click handlers
+
+document.addEventListener('DOMContentLoaded', async function() {
   const menuItems = document.querySelectorAll('.menu-item');
   
   menuItems.forEach(item => {
     item.addEventListener('click', function(e) {
       e.preventDefault();
       const menuText = this.querySelector('span:last-child').textContent;
-      console.log('Clicked:', menuText);
-      
-      // Optional: Handle active state
-      // Remove active class from all items
-      menuItems.forEach(mi => mi.classList.remove('active'));
-      // Add active class to clicked item
+      console.log('Clicked:', menuText);
+      menuItems.forEach(mi => mi.classList.remove('active'));
       this.classList.add('active');
     });
-  });
-
-  // Stat card click handlers
+  });
   const statCards = document.querySelectorAll('.stat-card');
   
   statCards.forEach(card => {
     card.addEventListener('click', function() {
-      console.log('Stat card clicked:', this.textContent);
-      // Add your stat card functionality here
+      console.log('Stat card clicked:', this.textContent);
     });
-  });
-
-  // Fetch simple analytics from API (transactions, orders, products)
+  });
   try {
     const [txRes, ordersRes, productsRes] = await Promise.all([
       fetch('http://localhost:3001/api/logs/transactions'),
@@ -37,12 +27,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     ]);
     const txJson = await txRes.json().catch(()=>({ok:false}));
     const ordersJson = await ordersRes.json().catch(()=>({ok:false}));
-    const productsJson = await productsRes.json().catch(()=>({ok:false}));
-
-    // compute metrics and populate stat cards if present
+    const productsJson = await productsRes.json().catch(()=>({ok:false}));
     const stats = document.querySelectorAll('.stat-card');
-    if (stats && stats.length) {
-      // Today's sales (sum transactions today)
+    if (stats && stats.length) {
       let todaySales = 0;
       if (txJson.ok && Array.isArray(txJson.rows)) {
         const today = new Date().toDateString();

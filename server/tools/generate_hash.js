@@ -1,5 +1,4 @@
-// Simple helper to generate a bcrypt password hash for seeding the database.
-// Usage: node tools/generate_hash.js yourPassword
+
 const bcrypt = require('bcrypt');
 
 async function main() {

@@ -1,4 +1,4 @@
-// Store data in memory instead of localStorage
+
 let accountDataStore = {
   accountName: '',
   username: '',
@@ -10,16 +10,12 @@ let accountDataStore = {
 let maintenanceDataStore = {
   aboutUs: '',
   contactMessage: ''
-};
-
-// Load saved data on page load
+};
 window.addEventListener('DOMContentLoaded', () => {
   loadAccountData();
   loadMaintenanceData();
   loadDarkMode();
-});
-
-// Fetch users from API for admin usage
+});
 async function fetchUsersFromApi() {
   try {
     const res = await fetch('http://localhost:3001/api/users');
@@ -32,32 +28,25 @@ async function fetchUsersFromApi() {
     console.warn('Users API not available', e);
   }
   return [];
-}
-
-// Account Modal Functions
-function openAccountModal() {
-  // Populate fields with current user info when opening
+}
+function openAccountModal() {
   try {
     const currentUser = (function(){ try{ return JSON.parse(localStorage.getItem('currentUser')); }catch(e){return null;} })();
-    if (currentUser && currentUser.UserId) {
-      // Try to fetch fresh user data from API
+    if (currentUser && currentUser.UserId) {
       (async function(){
         try {
           const res = await fetch('http://localhost:3001/api/users');
           const json = await res.json();
           if (json && json.ok && Array.isArray(json.rows)) {
             const user = json.rows.find(u => Number(u.UserId) === Number(currentUser.UserId));
-            if (user) {
-              // Fill fields: accountName = FullName, username = Username, email, contact
+            if (user) {
               document.getElementById('accountName').value = user.FullName || '';
               document.getElementById('username').value = user.Username || '';
-              document.getElementById('email').value = user.Email || '';
-              // contact not stored in Users table; leave as is
+              document.getElementById('email').value = user.Email || '';
               document.getElementById('contact').value = '';
             }
           }
-        } catch(e){
-          // fallback to localStorage values
+        } catch(e){
           if (currentUser) {
             document.getElementById('accountName').value = currentUser.FullName || currentUser.Fullname || '';
             document.getElementById('username').value = currentUser.Username || '';
@@ -82,9 +71,7 @@ function loadAccountData() {
 }
 
 function saveAccountSettings(event) {
-  event.preventDefault();
-  
-  // Only allow saving own account (username/password) via API
+  event.preventDefault();
   const currentUser = (function(){ try{ return JSON.parse(localStorage.getItem('currentUser')); }catch(e){return null;} })();
   const accountName = document.getElementById('accountName').value;
   const username = document.getElementById('username').value;
@@ -92,8 +79,7 @@ function saveAccountSettings(event) {
   const contact = document.getElementById('contact').value;
   const password = document.getElementById('password').value;
 
-  if (currentUser && currentUser.UserId) {
-    // split accountName into first/last
+  if (currentUser && currentUser.UserId) {
     const parts = (accountName || '').trim().split(/\s+/);
     const firstName = parts.length ? parts[0] : '';
     const lastName = parts.length > 1 ? parts.slice(1).join(' ') : '';
@@ -106,8 +92,7 @@ function saveAccountSettings(event) {
         const successMsg = document.getElementById('accountSuccess');
         successMsg.classList.add('show');
         setTimeout(() => successMsg.classList.remove('show'), 3000);
-        document.getElementById('password').value = '';
-        // update localStorage currentUser username/email
+        document.getElementById('password').value = '';
         try { currentUser.Username = username; currentUser.Email = email; currentUser.FullName = accountName; localStorage.setItem('currentUser', JSON.stringify(currentUser)); } catch(e){}
       } else {
         alert('Failed to save account settings: ' + (j && j.error ? j.error : 'unknown'));
@@ -116,9 +101,7 @@ function saveAccountSettings(event) {
   } else {
     alert('No current user session found');
   }
-}
-
-// Maintenance Modal Functions
+}
 function openMaintenanceModal() {
   document.getElementById('maintenanceModal').classList.add('active');
 }
@@ -141,24 +124,18 @@ function saveMaintenanceSettings(event) {
   const successMsg = document.getElementById('maintenanceSuccess');
   successMsg.classList.add('show');
   setTimeout(() => successMsg.classList.remove('show'), 3000);
-}
-
-// Dark Mode Toggle
+}
 function toggleDarkMode(event) {
   event.stopPropagation();
-  const toggle = event.target;
-  // Use shared theme API if available
+  const toggle = event.target;
   let next;
   if (window.MiniCapstoneTheme && typeof window.MiniCapstoneTheme.toggle === 'function') {
     next = window.MiniCapstoneTheme.toggle();
-  } else {
-    // fallback: toggle local class
+  } else {
     toggle.classList.toggle('active');
     next = toggle.classList.contains('active');
     if (next) document.body.classList.add('dark-mode'); else document.body.classList.remove('dark-mode');
-  }
-
-  // Reflect state on the toggle element
+  }
   if (next) toggle.classList.add('active'); else toggle.classList.remove('active');
 }
 
@@ -177,9 +154,7 @@ function loadDarkMode() {
     toggle.classList.remove('active');
     document.body.classList.remove('dark-mode');
   }
-}
-
-// Close modals when clicking outside
+}
 window.onclick = function(event) {
   const accountModal = document.getElementById('accountModal');
   const maintenanceModal = document.getElementById('maintenanceModal');

@@ -15,7 +15,7 @@
 #placeOrderBtn { padding:10px 12px; border-radius:8px; border:none; background:#4caf50; color:#fff; cursor:pointer }
 .cart-total { margin-top:12px; font-weight:700 }
 
-/* dark mode tweaks */
+
 body.dark-mode .product-card, body.dark-mode .pos-cart { background:#1a1a1a; color:#e0e0e0; box-shadow:none }
 body.dark-mode .pos-header .back-link { color:#ff9f9f }
 body.dark-mode #placeOrderBtn { background:#2e7d32 }
