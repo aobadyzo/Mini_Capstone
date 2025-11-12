@@ -36,6 +36,7 @@
 
     
     <span class="title">Order Summary</span>
+  <button id="backBtn" class="back-button">Back</button>
 
     
     <div class="section-box product-subtotal">
@@ -86,14 +87,8 @@
         <span class="title-text">Delivery Option</span>
       </div>
       <div class="checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox">
-          Walk-in
-        </label>
-        <label class="checkbox-label">
-          <input type="checkbox">
-          Delivery
-        </label>
+        <label class="checkbox-label"><input type="radio" name="delivery" value="walkin" id="deliveryWalkin"> Walk-in</label>
+        <label class="checkbox-label"><input type="radio" name="delivery" value="delivery" id="deliveryDelivery"> Delivery</label>
       </div>
     </div>
 
@@ -105,7 +100,7 @@
       </div>
       <div class="input-row">
         <span>Address :</span>
-        <input type="text" placeholder="Enter address">
+        <input type="text" placeholder="Enter address" id="checkoutAddress">
       </div>
     </div>
 
@@ -117,7 +112,7 @@
       </div>
       <div class="input-row">
         <span>Contact Number :</span>
-        <input type="text" placeholder="Enter contact number">
+        <input type="text" placeholder="Enter contact number" id="checkoutContact">
       </div>
     </div>
 
@@ -127,9 +122,8 @@
         <span class="bullet">• </span>
         <span class="title-text">Product</span>
       </div>
-      <div class="section-content">
-        <div style="font-size: 16px; margin-bottom: 10px;">Product Name :</div>
-        <div style="font-size: 16px;">Amount :</div>
+      <div class="section-content" id="checkoutProductList">
+        <!-- product rows will be injected here -->
       </div>
     </div>
 
@@ -140,18 +134,9 @@
         <span class="title-text">Payment Method</span>
       </div>
       <div class="checkbox-group">
-        <label class="checkbox-label">
-          Gcash e-Wallet :
-          <input type="checkbox">
-        </label>
-        <label class="checkbox-label">
-          Cash on Delivery :
-          <input type="checkbox">
-        </label>
-        <label class="checkbox-label">
-          Credit/Debit :
-          <input type="checkbox">
-        </label>
+        <label class="checkbox-label"><input type="radio" name="payment" value="cash" id="payCash"> Cash</label>
+        <label class="checkbox-label"><input type="radio" name="payment" value="gcash" id="payGcash"> Gcash e-Wallet</label>
+        <label class="checkbox-label"><input type="radio" name="payment" value="card" id="payCard"> Credit/Debit</label>
       </div>
     </div>
 

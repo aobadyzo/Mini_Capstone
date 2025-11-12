@@ -2,7 +2,8 @@
 const container = document.querySelector('.container');
 console.log('Login script loaded');
 const registerBtn = document.querySelector('.register-btn');
-const loginBtn = document.querySelector('.login-btn');
+const loginBtn = document.querySelector('.login-btn');
+
 
 
 registerBtn.addEventListener('click', () => {
@@ -11,33 +12,40 @@ registerBtn.addEventListener('click', () => {
 
 loginBtn.addEventListener('click', () => {
          document.querySelector('.container').classList.remove('active');
-});
+});
+
 document.addEventListener('DOMContentLoaded', () => {
     const loginForm = document.querySelector('.form-box.login form');
     if (!loginForm) return;
     loginForm.addEventListener('submit', async (ev) => {
         ev.preventDefault();
         const username = loginForm.querySelectorAll('input')[0].value.trim();
-        const password = loginForm.querySelectorAll('input')[1].value.trim();
+        const password = loginForm.querySelectorAll('input')[1].value.trim();
+
         const localUsers = [
             { UserId: 1, Username: 'admin', Email: 'admin@example.local', PasswordHash: 'admin123', FullName: 'Administrator', Role: 'admin', CreatedAt: new Date().toISOString() },
             { UserId: 2, Username: 'cashier', Email: 'cashier@example.local', PasswordHash: 'cashier123', FullName: 'Cashier User', Role: 'cashier', CreatedAt: new Date().toISOString() }
-        ];
+        ];
+
         const performLoginCheck = (jsonData) => {
             try {
                 console.log('API rows count:', jsonData && jsonData.rows ? jsonData.rows.length : 'no rows');
                 if (jsonData && jsonData.ok && Array.isArray(jsonData.rows)) {
-                    console.log('Searching users for', username);
+                    console.log('Searching users for', username);
+
                     const user = jsonData.rows.find(u => (u.Username && u.Username.toLowerCase() === username.toLowerCase()) || (u.Email && u.Email.toLowerCase() === username.toLowerCase()));
                     console.log('Found user object:', user);
-                    if (user) {
+                    if (user) {
+
                         const storedHash = (user.PasswordHash || '').toString().trim();
                         console.log('Comparing entered password (len)', password.length, 'to stored PasswordHash (trimmed):', storedHash ? `(len ${storedHash.length})` : '(empty)');
-                        if (password === storedHash) {
+                        if (password === storedHash) {
+
                             try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch (e) { console.warn('Could not persist currentUser', e); }
 
                             const baseUrl = `${location.protocol}//${location.hostname}${location.port ? (':' + location.port) : ''}`;
-                            console.log('Redirecting user:', user.Role);
+                            console.log('Redirecting user:', user.Role);
+
                             try {
                                 const auditHost = successfulHost || 'http://localhost:3001';
                                 if (auditHost !== 'localFallback') {
@@ -49,7 +57,8 @@ document.addEventListener('DOMContentLoaded', () => {
                             } catch(e) {  }
                             try {
                                 if ((user.Role || '').toLowerCase() === 'cashier') {
-                                    window.location.href = `${baseUrl}/Cashier/pos.html`;
+                                    // CreateOrder is located under Cashier/POS
+                                    window.location.href = `${baseUrl}/Cashier/POS/CreateOrder.html`;
                                 } else {
                                     window.location.href = `${baseUrl}/Menubar/Inventory.html`;
                                 }
@@ -70,12 +79,15 @@ document.addEventListener('DOMContentLoaded', () => {
             return false;
         };
 
-    try {
+    try {
+
             const apiCandidates = [
                 `${location.protocol}//${location.hostname}:3001`,
-                'http://localhost:3001',
+                'http://localhost:3001',
+
                 `${location.protocol}//${location.hostname}${location.port ? (':' + location.port) : ''}`
-            ];
+            ];
+
             const fetchWithTimeout = (url, opts = {}, ms = 3000) => {
                 const controller = new AbortController();
                 const id = setTimeout(() => controller.abort(), ms);
@@ -100,19 +112,23 @@ document.addEventListener('DOMContentLoaded', () => {
                         break;
                     }
                 } catch (e) {
-                    console.log('Fetch failed for', url, e && e.name ? e.name : e);
+                    console.log('Fetch failed for', url, e && e.name ? e.name : e);
+
                 }
             }
-            console.log('API finished, selected host:', successfulHost);
+            console.log('API finished, selected host:', successfulHost);
+
             if (!json) {
                 console.log('No API response, using local fallback users for testing');
                 json = { ok: true, rows: localUsers };
                 successfulHost = 'localFallback';
-            }
+            }
+
             if (performLoginCheck(json)) return;
             alert('Invalid credentials or user not found');
         } catch (e) {
-            console.warn('Login API error', e);
+            console.warn('Login API error', e);
+
             json = { ok: true, rows: localUsers };
             console.log('Using local fallback users due to API error');
             if (performLoginCheck(json)) return;

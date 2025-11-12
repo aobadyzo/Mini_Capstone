@@ -110,7 +110,8 @@ const ordersData = [
             { name: 'Ground Beef', quantity: 3, price: '$210.00' }
         ]
     }
-];
+];
+
 function renderOrders(orders = ordersData) {
     const container = document.getElementById('ordersContainer');
     
@@ -118,7 +119,8 @@ function renderOrders(orders = ordersData) {
         <div class="table-row" onclick="viewOrderDetails('${order.id}')">
             <div>${order.id}</div>
             <div>${order.customer}</div>
-            <div>${order.totalItems} items</div>
+            <!-- show order id/string in the Item column as requested -->
+            <div>${order.id}</div>
             <div>${order.payment}</div>
             <div>
                 <span class="status-badge status-${order.status}">${order.status}</span>
@@ -134,7 +136,8 @@ function renderOrders(orders = ordersData) {
             </div>
         </div>
     `).join('');
-}
+}
+
 function approveOrder(event, orderId) {
     event.stopPropagation();
     const order = ordersData.find(o => o.id === orderId);
@@ -143,7 +146,8 @@ function approveOrder(event, orderId) {
         renderOrders();
         showNotification(`Order ${orderId} approved!`, 'success');
     }
-}
+}
+
 function cancelOrder(event, orderId) {
     event.stopPropagation();
     const order = ordersData.find(o => o.id === orderId);
@@ -152,7 +156,8 @@ function cancelOrder(event, orderId) {
         renderOrders();
         showNotification(`Order ${orderId} cancelled!`, 'error');
     }
-}
+}
+
 function showNotification(message, type) {
     const notification = document.createElement('div');
     notification.textContent = message;
@@ -174,63 +179,86 @@ function showNotification(message, type) {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 2000);
-}
-function viewOrderDetails(orderId) {
-    const order = ordersData.find(o => o.id === orderId);
-    if (!order) return;
-    
+}
+
+async function viewOrderDetails(orderId) {
+    // try to load detailed info from server (orderId may be OrderNumber string like 'ORD-123' or a numeric id)
     const modalBody = document.getElementById('modalBody');
-    modalBody.innerHTML = `
-        <div class="detail-row">
-            <div class="detail-label">Order ID</div>
-            <div class="detail-value">${order.id}</div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Customer</div>
-            <div class="detail-value">${order.customer}</div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Order Date</div>
-            <div class="detail-value">${order.date}</div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Status</div>
-            <div class="detail-value">
-                <span class="status-badge status-${order.status}">${order.status}</span>
-            </div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Payment Method</div>
-            <div class="detail-value">${order.payment}</div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Delivery Address</div>
-            <div class="detail-value">${order.address}</div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Order Items</div>
-            <div class="detail-value">
-                ${order.items.map(item => `
-                    <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 8px;">
-                        <strong>${item.name}</strong><br>
-                        Quantity: ${item.quantity} - ${item.price}
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-        <div class="detail-row">
-            <div class="detail-label">Total Price</div>
-            <div class="detail-value" style="font-size: 24px; font-weight: 600; color: #f59e9e;">
-                ${order.totalPrice}
-            </div>
-        </div>
-    `;
-    
+    modalBody.innerHTML = `<div style="padding:20px;color:#666">Loading order details...</div>`;
     document.getElementById('orderModal').classList.add('active');
-}
+    try {
+        const encoded = encodeURIComponent(orderId);
+        const res = await fetch(`http://localhost:3001/api/orders/${encoded}`);
+        const json = await res.json().catch(()=>null);
+        if (!res.ok || !json || !json.ok) {
+            modalBody.innerHTML = `<div style="padding:20px;color:#c00">Failed to load order details</div>`;
+            return;
+        }
+
+        const d = json.data || {};
+        const ord = d.order || {};
+        const tx = d.transaction || {};
+        // items may come from order items or from parsed notes.cart
+        let items = Array.isArray(d.items) && d.items.length ? d.items : [];
+        if ((!items || items.length === 0) && tx && tx.notes && Array.isArray(tx.notes.cart)) items = tx.notes.cart.map(ci => ({ name: ci.name || ci.productName || ('Product ' + ci.id), quantity: ci.quantity, unitPrice: Number(ci.price || 0) }));
+
+        const paymentMethod = (tx && tx.paymentMethod) ? tx.paymentMethod : 'N/A';
+        const address = (tx && tx.notes && tx.notes.address) ? tx.notes.address : '';
+        const contact = (tx && tx.notes && tx.notes.contact) ? tx.notes.contact : '';
+
+        modalBody.innerHTML = `
+            <div class="detail-row">
+                <div class="detail-label">Order ID</div>
+                <div class="detail-value">${ord.orderNumber || ('ORD-' + String(ord.orderId || '').padStart(3,'0'))}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Status</div>
+                <div class="detail-value"><span class="status-badge status-${(ord.orderStatus||'pending').toLowerCase()}">${ord.orderStatus || 'pending'}</span></div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Order Date</div>
+                <div class="detail-value">${ord.placedAt || ''}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Payment Method</div>
+                <div class="detail-value">${paymentMethod}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Delivery Address</div>
+                <div class="detail-value">${address || '-'}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Contact</div>
+                <div class="detail-value">${contact || '-'}</div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Order Items</div>
+                <div class="detail-value">
+                    ${items.length ? items.map(item => `
+                        <div style="margin-top: 10px; padding: 10px; background: white; border-radius: 8px; color:#222;">
+                            <strong>${item.name}</strong><br>
+                            Quantity: ${item.quantity} - PHP ${Number(item.unitPrice || item.price || 0).toFixed(2)}
+                        </div>
+                    `).join('') : '<div style="color:#999">No items recorded for this order</div>'}
+                </div>
+            </div>
+            <div class="detail-row">
+                <div class="detail-label">Total Price</div>
+                <div class="detail-value" style="font-size: 24px; font-weight: 600; color: #f59e9e;">
+                    PHP ${Number(ord.totalAmount || ord.TotalPrice || 0).toFixed(2)}
+                </div>
+            </div>
+        `;
+    } catch (e) {
+        console.warn('Failed to fetch order details', e);
+        modalBody.innerHTML = `<div style="padding:20px;color:#c00">Error loading order details</div>`;
+    }
+}
+
 function closeOrderModal() {
     document.getElementById('orderModal').classList.remove('active');
-}
+}
+
 const searchInput = document.getElementById('searchInput');
 
 searchInput.addEventListener('input', (e) => {
@@ -243,17 +271,21 @@ searchInput.addEventListener('input', (e) => {
         order.payment.toLowerCase().includes(searchTerm)
     );
     renderOrders(filteredOrders);
-});
+});
+
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeOrderModal();
     }
-});
-document.addEventListener('DOMContentLoaded', async () => {
+});
+
+document.addEventListener('DOMContentLoaded', async () => {
+
     try {
         const res = await fetch('http://localhost:3001/api/orders');
         const json = await res.json();
-        if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+        if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+
             const apiOrders = json.rows.map(r => ({
                 id: r.OrderNumber || (`ORD-${String(r.OrderId).padStart(3,'0')}`),
                 customer: r.CustomerName || 'Customer',
@@ -264,7 +296,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 date: r.OrderDate || '',
                 totalPrice: r.TotalPrice || r.TotalAmount || '$0.00',
                 items: []
-            }));
+            }));
+
             ordersData.length = 0;
             ordersData.push(...apiOrders);
             renderOrders(ordersData);
@@ -272,6 +305,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     } catch (e) {
         console.warn('Orders API not available', e);
-    }
+    }
+
     renderOrders();
 });

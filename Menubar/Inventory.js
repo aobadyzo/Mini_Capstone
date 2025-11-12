@@ -1,9 +1,9 @@
 
 let inventory = [
-    { id: '123', name: 'Fresh Fish', quantity: 12, stockLevel: 'low', expiration: '12-2026', dateAdded: '10-2024', image: null },
-    { id: '124', name: 'Chicken Breast', quantity: 45, stockLevel: 'medium', expiration: '06-2025', dateAdded: '10-2024', image: null },
-    { id: '125', name: 'Ground Beef', quantity: 78, stockLevel: 'high', expiration: '08-2025', dateAdded: '10-2024', image: null },
-    { id: '126', name: 'Salmon Fillet', quantity: 8, stockLevel: 'low', expiration: '11-2024', dateAdded: '10-2024', image: null }
+    { id: '123', name: 'Fresh Fish', price: 120.00, quantity: 12, stockLevel: 'low', expiration: '12-2026', dateAdded: '10-2024', image: null },
+    { id: '124', name: 'Chicken Breast', price: 220.00, quantity: 45, stockLevel: 'medium', expiration: '06-2025', dateAdded: '10-2024', image: null },
+    { id: '125', name: 'Ground Beef', price: 320.00, quantity: 78, stockLevel: 'high', expiration: '08-2025', dateAdded: '10-2024', image: null },
+    { id: '126', name: 'Salmon Fillet', price: 180.00, quantity: 8, stockLevel: 'low', expiration: '11-2024', dateAdded: '10-2024', image: null }
 ];
 
 let disposalHistory = [];
@@ -12,47 +12,70 @@ let currentProductImage = null;
 function renderInventory(items = inventory) {
     const list = document.getElementById('inventoryList');
     list.innerHTML = items.map((item, index) => `
-        <div class="table-row" style="animation-delay: ${0.9 + index * 0.1}s">
+        <div class="table-row" style="animation-delay: ${0.9 + index * 0.1}s" onclick="openEditModal('${item.id}')">
             <div class="product-image-cell">
                 ${item.image ? `<img src="${item.image}" alt="${item.name}">` : '<span class="material-icons">image</span>'}
             </div>
             <div>${item.name}</div>
+            <div>PHP ${Number(item.price || 0).toFixed(2)}</div>
             <div>${item.id}</div>
             <div>${item.quantity}</div>
             <div><span class="stock-level stock-${item.stockLevel}">${item.stockLevel}</span></div>
             <div>${item.expiration}</div>
             <div>${item.dateAdded}</div>
             <div>
-                <button class="delete-btn" onclick="deleteItem('${item.id}')">×</button>
+                <button class="delete-btn" onclick="event.stopPropagation(); deleteItem('${item.id}')">×</button>
             </div>
         </div>
     `).join('');
-}
+}
+
 function deleteItem(id) {
-    if (confirm('Are you sure you want to delete this item?')) {
+    if (!confirm('Are you sure you want to delete this item?')) return;
+
+    // try server-side delete first
+    (async function(){
+        try {
+            const res = await fetch(`http://localhost:3001/api/products/${encodeURIComponent(id)}`, { method: 'DELETE' });
+            const j = await res.json().catch(()=>null);
+            if (res.ok && j && j.ok) {
+                await refreshProducts();
+                alert('Product deleted');
+                return;
+            }
+        } catch (e) {
+            console.warn('Server delete failed, falling back to local delete', e);
+        }
+
+        // fallback: remove locally
         inventory = inventory.filter(item => item.id !== id);
         renderInventory();
-    }
-}
+    })();
+}
+
 function openAddModal() {
     document.getElementById('addModal').classList.add('active');
-}
+}
+
 function openAdjustModal() {
     const select = document.getElementById('adjustProductSelect');
     select.innerHTML = '<option value="">Select a product</option>' + 
         inventory.map(item => `<option value="${item.id}">${item.name} (${item.id}) - Current: ${item.quantity}</option>`).join('');
     document.getElementById('adjustModal').classList.add('active');
-}
+}
+
 function openRestockModal() {
     const select = document.getElementById('restockProductSelect');
     select.innerHTML = '<option value="">Select a product</option>' + 
         inventory.map(item => `<option value="${item.id}">${item.name} (${item.id}) - Current: ${item.quantity}</option>`).join('');
     document.getElementById('restockModal').classList.add('active');
-}
+}
+
 function openDisposalModal() {
     const select = document.getElementById('disposalProductId');
     select.innerHTML = '<option value="">Select a product</option>' + 
-        inventory.map(item => `<option value="${item.id}">${item.name} (${item.id}) - Available: ${item.quantity}</option>`).join('');
+        inventory.map(item => `<option value="${item.id}">${item.name} (${item.id}) - Available: ${item.quantity}</option>`).join('');
+
     const batchSelect = document.getElementById('disposalBatchNumber');
     select.onchange = async function onChange() {
         const pid = this.value;
@@ -61,12 +84,14 @@ function openDisposalModal() {
         try {
             const res = await fetch(`http://localhost:3001/api/batches?productId=${encodeURIComponent(pid)}`);
             const json = await res.json();
-            if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+            if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+
                 json.rows.forEach(b => {
                     const label = `${b.BatchId} — qty:${b.QuantityOnHand || 0}${b.Expiration ? ' — exp:' + b.Expiration : ''}`;
                     batchSelect.insertAdjacentHTML('beforeend', `<option value="${b.BatchId}">${label}</option>`);
                 });
-            } else {
+            } else {
+
                 const prod = inventory.find(i => String(i.id) === String(pid));
                 if (prod && prod.batchId) batchSelect.insertAdjacentHTML('beforeend', `<option value="${prod.batchId}">${prod.batchId}</option>`);
             }
@@ -77,20 +102,30 @@ function openDisposalModal() {
         }
     };
     document.getElementById('disposalModal').classList.add('active');
-}
+}
+
 function closeModal() {
     document.getElementById('addModal').classList.remove('active');
     document.getElementById('adjustModal').classList.remove('active');
     document.getElementById('restockModal').classList.remove('active');
     document.getElementById('disposalModal').classList.remove('active');
-}
+}
+
 function addProduct() {
     const name = document.getElementById('productName').value;
+    const price = parseFloat(document.getElementById('productPrice').value);
     const id = document.getElementById('productId').value;
     const quantity = document.getElementById('productQuantity').value;
     const stockLevel = document.getElementById('stockLevel').value;
-    const expiration = document.getElementById('expirationDate').value;
-    if (name && id && quantity) {
+    const expiration = document.getElementById('expirationDate').value;
+
+    if (!name || !id || !quantity || isNaN(price)) {
+        alert('Please fill in all fields including a valid price');
+        return;
+    }
+
+    // ensure price is included
+
         const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
     fetch('http://localhost:3001/api/inventory/add', {
             method: 'POST',
@@ -98,7 +133,7 @@ function addProduct() {
             body: JSON.stringify({
             name,
             description: '',
-            price: 0.00,
+            price: Number(price),
             quantity: parseInt(quantity),
             imageBase64: currentProductImage,
             imageFileName: null,
@@ -109,23 +144,94 @@ function addProduct() {
         }).then(r => r.json()).then(async j => {
             console.log('API addProduct', j);
             if (j && j.ok) {
-                await refreshProducts();
+                await refreshProducts();
+
                 document.getElementById('productName').value = '';
+                document.getElementById('productPrice').value = '';
                 document.getElementById('productId').value = '';
                 document.getElementById('productQuantity').value = '';
                 document.getElementById('expirationDate').value = '';
                 currentProductImage = null;
                 resetImagePreview();
                 closeModal();
-                alert('Product added successfully!');
+                alert('Product added successfully!');
+
             } else {
                 alert('Failed to add product: ' + (j && j.error ? j.error : 'unknown'));
             }
         }).catch(e => { console.warn('API not available', e); alert('Could not reach API to add product.'); });
+
+}
+
+// Edit product modal logic
+function openEditModal(id) {
+    const item = inventory.find(i => String(i.id) === String(id));
+    if (!item) return;
+    document.getElementById('editProductId').value = item.id;
+    document.getElementById('editProductName').value = item.name || '';
+    document.getElementById('editProductPrice').value = item.price != null ? Number(item.price).toFixed(2) : '';
+    const preview = document.getElementById('editImagePreview');
+    if (item.image) {
+        preview.innerHTML = `<img src="${item.image}" alt="${item.name}">`;
+        preview.classList.add('has-image');
     } else {
-        alert('Please fill in all fields');
+        preview.innerHTML = `\n            <span class="material-icons">add_photo_alternate</span>\n            <span>Click to upload image</span>\n        `;
+        preview.classList.remove('has-image');
     }
-}
+    document.getElementById('editModal').classList.add('active');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('active');
+    document.getElementById('editProductImage').value = '';
+}
+
+document.getElementById('editProductImage').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+            const preview = document.getElementById('editImagePreview');
+            preview.innerHTML = `<img src="${event.target.result}" alt="Product Preview">`;
+            preview.classList.add('has-image');
+            // store temporarily on the edit modal element
+            document.getElementById('editModal').dataset.image = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+function saveEditedProduct() {
+    const id = document.getElementById('editProductId').value;
+    const name = document.getElementById('editProductName').value;
+    const price = parseFloat(document.getElementById('editProductPrice').value);
+    const imageBase64 = document.getElementById('editModal').dataset.image || null;
+
+    if (!id || !name || isNaN(price)) {
+        alert('Please provide a valid name and price');
+        return;
+    }
+
+    const item = inventory.find(i => String(i.id) === String(id));
+    if (!item) { alert('Product not found'); return; }
+
+    item.name = name;
+    item.price = Number(price);
+    if (imageBase64) item.image = imageBase64;
+
+    renderInventory();
+    closeEditModal();
+
+    // Try to update backend if available
+    try {
+        fetch('http://localhost:3001/api/inventory/update', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ productId: id, name: item.name, price: item.price, imageBase64: imageBase64 })
+        }).then(r => r.json()).then(j => console.log('update result', j)).catch(()=>{});
+    } catch(e) { }
+}
+
 function adjustStock() {
     const id = document.getElementById('adjustProductSelect').value;
     const quantity = parseInt(document.getElementById('adjustQuantity').value);
@@ -143,23 +249,27 @@ function adjustStock() {
     }
     
     const item = inventory.find(i => i.id === id);
-    if (item) {
+    if (item) {
+
         if (adjustmentType === 'add') {
             item.quantity += quantity;
         } else if (adjustmentType === 'subtract') {
             item.quantity = Math.max(0, item.quantity - quantity);
         } else if (adjustmentType === 'set') {
             item.quantity = quantity;
-        }
+        }
+
         if (stockLevel) {
             item.stockLevel = stockLevel;
         }
         
         renderInventory();
-        closeModal();
+        closeModal();
+
         document.getElementById('adjustQuantity').value = '';
         
-        alert('Stock adjusted successfully!');
+        alert('Stock adjusted successfully!');
+
         fetch('http://localhost:3001/api/inventory/adjust', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -169,9 +279,11 @@ function adjustStock() {
             if (j && j.ok) {
                 await refreshProducts();
             }
-        }).catch(e => console.warn('API not available', e));
+        }).catch(e => console.warn('API not available', e));
+
     }
-}
+}
+
 async function restockProduct() {
     console.log('restockProduct() called');
     const btn = document.getElementById('restockBtn');
@@ -184,7 +296,8 @@ async function restockProduct() {
         btn.disabled = true;
         const oldText = btn.textContent;
         btn.dataset._oldText = oldText;
-        btn.textContent = 'Restocking...';
+        btn.textContent = 'Restocking...';
+
         const t = setTimeout(() => {
             try {
                 btn.dataset.inprogress = '0';
@@ -211,10 +324,12 @@ async function restockProduct() {
     
     const item = inventory.find(i => i.id === id);
     if (item) {
-        item.quantity += quantity;
+        item.quantity += quantity;
+
         if (expiration && expiration.trim()) {
             item.expiration = expiration;
-        }
+        }
+
         if (item.quantity < 20) {
             item.stockLevel = 'low';
         } else if (item.quantity < 50) {
@@ -224,11 +339,13 @@ async function restockProduct() {
         }
         
         renderInventory();
-        closeModal();
+        closeModal();
+
         document.getElementById('restockQuantity').value = '';
         document.getElementById('restockExpiration').value = '';
         
-        alert(`Successfully restocked ${quantity} units of ${item.name}`);
+        alert(`Successfully restocked ${quantity} units of ${item.name}`);
+
         const performedBy = (function(){ try{ const u = JSON.parse(localStorage.getItem('currentUser')); return u && u.UserId ? u.UserId : null;}catch(e){return null;} })();
         try {
             const res = await fetch('http://localhost:3001/api/inventory/restock', {
@@ -246,13 +363,16 @@ async function restockProduct() {
         } catch (e) {
             console.warn('API not available', e);
             alert('Could not reach API to restock product.');
-        } finally {
+        } finally {
+
             console.log('restockProduct() finally block executing');
             if (btn) {
                 btn.dataset.inprogress = '0';
-                btn.disabled = false;
+                btn.disabled = false;
+
                 btn.textContent = btn.dataset._oldText || 'Restock';
-                try { delete btn.dataset._oldText; } catch(e){}
+                try { delete btn.dataset._oldText; } catch(e){}
+
                 if (btn.dataset._timer) {
                     clearTimeout(btn.dataset._timer);
                     delete btn.dataset._timer;
@@ -260,7 +380,8 @@ async function restockProduct() {
             }
         }
     }
-}
+}
+
 function disposeProduct() {
     const id = document.getElementById('disposalProductId').value;
     const batchNumber = document.getElementById('disposalBatchNumber').value;
@@ -297,7 +418,8 @@ function disposeProduct() {
         console.log('API dispose', j);
         if (j && j.ok) {
             disposalHistory.push(disposalRecord);
-            await refreshProducts();
+            await refreshProducts();
+
             document.getElementById('disposalBatchNumber').value = '';
             document.getElementById('disposalQuantity').value = '';
             document.getElementById('disposalReason').value = '';
@@ -305,12 +427,15 @@ function disposeProduct() {
             document.getElementById('disposalNotes').value = '';
             closeModal();
             alert(`Successfully disposed ${quantity} units of ${item.name}\nBatch: ${batchNumber}\nReason: ${disposalRecord.reason}`);
-            console.log('Disposal History:', disposalHistory);
+            console.log('Disposal History:', disposalHistory);
+
         } else {
             alert('Failed to dispose product: ' + (j && j.error ? j.error : 'unknown'));
         }
     }).catch(e => { console.warn('API not available', e); alert('Could not reach API to dispose product.'); });
-}
+}
+
+
 const navMap = {
     'Dashboard': '../Home Page/index.html',
     'User': 'User.html',
@@ -336,7 +461,8 @@ function sendAudit(performedBy, actionType, details) {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ performedBy: performedBy || null, actionType, details })
     }).then(r => r.json()).then(j => console.log('Audit:', j)).catch(e => {});
-}
+}
+
 document.getElementById('searchInput').addEventListener('input', (e) => {
     const search = e.target.value.toLowerCase();
     const filtered = inventory.filter(item => 
@@ -344,7 +470,8 @@ document.getElementById('searchInput').addEventListener('input', (e) => {
         item.id.toLowerCase().includes(search)
     );
     renderInventory(filtered);
-});
+});
+
 document.getElementById('disposalReason').addEventListener('change', (e) => {
     const otherReasonGroup = document.getElementById('otherReasonGroup');
     if (e.target.value === 'other') {
@@ -352,7 +479,8 @@ document.getElementById('disposalReason').addEventListener('change', (e) => {
     } else {
         otherReasonGroup.style.display = 'none';
     }
-});
+});
+
 document.getElementById('productImage').addEventListener('change', (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -375,22 +503,27 @@ function resetImagePreview() {
     `;
     preview.classList.remove('has-image');
     document.getElementById('productImage').value = '';
-}
+}
+
 document.querySelectorAll('.modal').forEach(modal => {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) {
             closeModal();
         }
     });
-});
+});
+
 (async function initInventory() {
     try {
         const res = await fetch('http://localhost:3001/api/products');
         const json = await res.json();
-        if (json && json.ok && Array.isArray(json.rows)) {
+        if (json && json.ok && Array.isArray(json.rows)) {
+
             inventory = json.rows.map(p => ({
             id: String(p.ProductId),
             name: p.Name || 'Product',
+            // include price from API so it displays and persists after edits
+            price: typeof p.Price !== 'undefined' && p.Price !== null ? Number(p.Price) : 0,
             quantity: p.QuantityOnHand || 0,
             stockLevel: (p.QuantityOnHand < 20) ? 'low' : (p.QuantityOnHand < 50) ? 'medium' : 'high',
             expiration: p.Expiration || null,
@@ -403,9 +536,11 @@ document.querySelectorAll('.modal').forEach(modal => {
         }
     } catch (e) {
         console.warn('Products API not available', e);
-    }
+    }
+
     renderInventory();
-})();
+})();
+
 async function refreshProducts() {
     try {
         const res = await fetch('http://localhost:3001/api/products');
@@ -414,6 +549,8 @@ async function refreshProducts() {
             inventory = json.rows.map(p => ({
                 id: String(p.ProductId),
                 name: p.Name || 'Product',
+                // include price so refresh keeps the updated value
+                price: typeof p.Price !== 'undefined' && p.Price !== null ? Number(p.Price) : 0,
                 quantity: p.QuantityOnHand || 0,
                 stockLevel: (p.QuantityOnHand < 20) ? 'low' : (p.QuantityOnHand < 50) ? 'medium' : 'high',
                 expiration: p.Expiration || null,

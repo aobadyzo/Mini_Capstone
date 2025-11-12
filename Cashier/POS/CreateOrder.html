@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>POS System</title>
+    <title>Create Order</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-    <link rel="stylesheet" href="Cashier.css">
+    <link rel="stylesheet" href="CreateOrder.css">
 </head>
 <body>
     <div class="POS">
@@ -16,15 +16,15 @@
                 <span class="material-icons">edit_document</span>
                 <span>Create Order</span>
             </div>
-            <div class="menu-item menu-orders">
+            <div class="menu-item menu-orders" data-target="CashierOrders.html">
                 <span class="material-icons">receipt_long</span>
                 <span>Orders</span>
             </div>
-            <div class="menu-item menu-settings">
+            <div class="menu-item menu-settings" data-target="CashierSettings.html">
                 <span class="material-icons">settings</span>
                 <span>Settings</span>
             </div>
-            <div class="menu-item menu-logout">
+            <div class="menu-item menu-logout" data-target="../Login/index.html">
                 <span class="material-icons">logout</span>
                 <span>Logout</span>
             </div>
@@ -84,6 +84,6 @@
         </div>
     </div>
 
-    <script src="Cashier.js"></script>
+    <script src="CreateOrder.js"></script>
 </body>
 </html>

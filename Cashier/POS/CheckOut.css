@@ -172,7 +172,9 @@ body {
   top: 96px;
   left: 1090px;
   width: 315px;
-  height: 164px;
+  /* allow the box to expand a bit and host a scrollable content area */
+  height: auto;
+  min-height: 164px;
   padding: 20px;
 }
 
@@ -202,6 +204,39 @@ body {
 
 .section-content {
   padding-left: 15px;
+}
+
+/* Make product list scrollable so long text doesn't overflow */
+#checkoutProductList {
+  /* constrain product list to fit inside the product-info box */
+  max-height: 120px;
+  overflow-y: auto;
+  padding-right: 8px; /* space for scrollbar */
+}
+
+/* Back button styling */
+.back-button {
+  /* visually match the checkout button style */
+  position: absolute;
+  top: 620px;
+  left: 1122px;
+  z-index: 1000;
+  width: 246px;
+  height: 72px;
+  border: 2px solid rgba(0, 0, 0, 1);
+  border-radius: 30px;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+}
+.back-button:hover {
+  background-color: #4CAF50;
+  color: white;
 }
 
 .row {

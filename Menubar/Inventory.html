@@ -71,6 +71,40 @@
                 <span>Logout</span>
             </div>
         </div>
+    
+            <!-- Edit Product Modal -->
+            <div class="modal" id="editModal">
+                <div class="modal-content">
+                    <div class="modal-header">Edit Product</div>
+                    <input type="hidden" id="editProductId">
+
+                    <div class="form-group">
+                        <label class="form-label">Product Image</label>
+                        <div class="image-upload-container">
+                            <input type="file" id="editProductImage" accept="image/*" style="display: none;">
+                            <div class="image-preview" id="editImagePreview" onclick="document.getElementById('editProductImage').click()">
+                                <span class="material-icons">add_photo_alternate</span>
+                                <span>Click to upload image</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Product Name</label>
+                        <input type="text" class="form-input" id="editProductName">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Price</label>
+                        <input type="number" class="form-input" id="editProductPrice" step="0.01" placeholder="0.00">
+                    </div>
+
+                    <div class="modal-buttons">
+                        <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                        <button type="button" class="btn btn-primary" onclick="saveEditedProduct()">Save Changes</button>
+                    </div>
+                </div>
+            </div>
         
         
         <div class="main-content">
@@ -89,6 +123,7 @@
                     <div class="table-header">
                         <div>IMAGE</div>
                         <div>NAME</div>
+                        <div>PRICE</div>
                         <div>ID</div>
                         <div>QUANTITY</div>
                         <div>STOCK LEVEL</div>
@@ -159,6 +194,10 @@
             <div class="form-group">
                 <label class="form-label">Product Name</label>
                 <input type="text" class="form-input" id="productName">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Price</label>
+                <input type="number" class="form-input" id="productPrice" step="0.01" placeholder="0.00">
             </div>
             <div class="form-group">
                 <label class="form-label">Product ID</label>
