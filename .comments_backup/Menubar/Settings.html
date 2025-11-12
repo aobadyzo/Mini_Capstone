@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,1,0" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" />
+  <link rel="stylesheet" href="Settings.css" />
+  <link rel="stylesheet" href="dark-theme.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+      <div class="logo">
+        <div class="logo-icon">
+          <span class="material-symbols-outlined">inventory_2</span>
+        </div>
+        <span>Inventory</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">dashboard</span>
+        </div>
+        <span>Dashboard</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">person</span>
+        </div>
+        <span>User</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </div>
+        <span>Orders</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">analytics</span>
+        </div>
+        <span>Analytics</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">inventory</span>
+        </div>
+        <span>Inventory</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">history</span>
+        </div>
+        <span>History</span>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="nav-item active">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">settings</span>
+        </div>
+        <span>Settings</span>
+      </div>
+
+      <div class="nav-item">
+        <div class="nav-icon">
+          <span class="material-symbols-outlined">logout</span>
+        </div>
+        <span>Logout</span>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      <div class="settings-card">
+        <div class="settings-title">
+          <span class="material-symbols-outlined">settings</span>
+          Settings
+        </div>
+
+        <!-- Settings Options -->
+        <div class="settings-option button-style" onclick="openAccountModal()">
+          <div class="option-left">
+            <span class="material-symbols-outlined">account_circle</span>
+            <span class="option-label">Account Settings</span>
+          </div>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </div>
+
+        <div class="settings-option">
+          <div class="option-left">
+            <span class="material-symbols-outlined">dark_mode</span>
+            <span class="option-label">Dark Mode</span>
+          </div>
+          <div class="toggle-off" onclick="toggleDarkMode(event)"></div>
+        </div>
+
+        <div class="settings-option button-style" onclick="openMaintenanceModal()">
+          <div class="option-left">
+            <span class="material-symbols-outlined">build</span>
+            <span class="option-label">Maintenance</span>
+          </div>
+          <span class="material-symbols-outlined">chevron_right</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Account Settings Modal -->
+  <div id="accountModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <span class="material-symbols-outlined">account_circle</span>
+          Account Settings
+        </h2>
+        <button class="close-btn" onclick="closeAccountModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="accountSuccess" class="success-message">
+        <span class="material-symbols-outlined">check_circle</span>
+        Settings saved successfully!
+      </div>
+      <form onsubmit="saveAccountSettings(event)">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">badge</span>
+            Account Name
+          </label>
+          <input type="text" class="form-input" id="accountName" placeholder="Enter account name" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">person</span>
+            Username
+          </label>
+          <input type="text" class="form-input" id="username" placeholder="Enter username" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">email</span>
+            Email
+          </label>
+          <input type="email" class="form-input" id="email" placeholder="Enter email address" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">phone</span>
+            Contact
+          </label>
+          <input type="tel" class="form-input" id="contact" placeholder="Enter contact number" required>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">lock</span>
+            Password
+          </label>
+          <input type="password" class="form-input" id="password" placeholder="Enter new password">
+        </div>
+        <button type="submit" class="btn-primary">
+          <span class="material-symbols-outlined">save</span>
+          Save Changes
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Maintenance Modal -->
+  <div id="maintenanceModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">
+          <span class="material-symbols-outlined">build</span>
+          Maintenance Settings
+        </h2>
+        <button class="close-btn" onclick="closeMaintenanceModal()">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+      <div id="maintenanceSuccess" class="success-message">
+        <span class="material-symbols-outlined">check_circle</span>
+        Maintenance settings saved successfully!
+      </div>
+      <form onsubmit="saveMaintenanceSettings(event)">
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">info</span>
+            About Us Message
+          </label>
+          <textarea class="form-textarea" id="aboutUs" placeholder="Enter About Us content" required></textarea>
+        </div>
+        <div class="form-group">
+          <label class="form-label">
+            <span class="material-symbols-outlined">contact_mail</span>
+            Contact Message
+          </label>
+          <textarea class="form-textarea" id="contactMessage" placeholder="Enter Contact information" required></textarea>
+        </div>
+        <button type="submit" class="btn-primary">
+          <span class="material-symbols-outlined">save</span>
+          Save Changes
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="nav.js"></script>
+  <script src="theme.js"></script>
+  <script src="Settings.js"></script>
+</body>
+</html>

@@ -1,0 +1,267 @@
+/* Shared dark-theme overrides for Menubar pages
+   These styles apply when <body> or <html> has the .dark-mode class.
+   They mirror the colors used in Settings.css so toggling dark mode feels consistent.
+*/
+
+body.dark-mode {
+  background: linear-gradient(180deg, #1a1a1a 0%, #2d1a1a 100%);
+  color: #e0e0e0;
+}
+
+body.dark-mode .sidebar {
+  background: transparent; /* keep sidebar transparent; adjust if needed */
+  color: #e0e0e0;
+}
+
+body.dark-mode .logo,
+body.dark-mode .nav-item,
+body.dark-mode .menu-item {
+  color: #e0e0e0;
+}
+
+body.dark-mode .nav-item:hover,
+body.dark-mode .menu-item:hover {
+  background: rgba(245, 158, 158, 0.15);
+}
+
+body.dark-mode .nav-item.active,
+body.dark-mode .menu-item.active {
+  background: rgba(245, 158, 158, 0.25);
+  font-weight: 600;
+}
+
+body.dark-mode .main-content,
+body.dark-mode .content-box,
+body.dark-mode .inventory-card,
+body.dark-mode .history-card,
+body.dark-mode .user-card {
+  background: #222;
+  color: #e0e0e0;
+}
+
+body.dark-mode .table-header,
+body.dark-mode .table-row {
+  background: transparent;
+  color: #e0e0e0;
+}
+
+body.dark-mode .table-row div { color: #e0e0e0; }
+
+body.dark-mode .action-card,
+body.dark-mode .stat-card,
+body.dark-mode .data-table th,
+body.dark-mode .data-table td {
+  background: #2a2a2a;
+  color: #e0e0e0;
+}
+
+/* Page headings: ensure Orders/Analytics titles are readable in dark mode */
+body.dark-mode .page-title,
+body.dark-mode .content-header h1,
+body.dark-mode .header h1 {
+  color: #ffffff !important;
+}
+
+/* Make sidebar top icons/title slightly lighter */
+body.dark-mode .content-header .material-icons,
+body.dark-mode .logo-icon .material-icons,
+body.dark-mode .logo { color: #e0e0e0; }
+
+/* Tabs/buttons: make non-active tab text darker for contrast in dark mode */
+body.dark-mode .tab {
+  color: #000000 !important;
+}
+
+/* Keep active tab readable (white on pink) */
+body.dark-mode .tab.active {
+  color: #ffffff !important;
+}
+
+body.dark-mode .modal-content,
+body.dark-mode .modal {
+  background: rgba(0,0,0,0.6);
+}
+
+/* Toggle control appearance (for the Settings toggle element) */
+body.dark-mode .toggle-off {
+  background: #4CAF50;
+}
+
+body.dark-mode .toggle-off::after { background: #fff; }
+
+/* User modal specific dark-mode adjustments */
+body.dark-mode .user-edit-modal .modal-overlay {
+  /* darker, fully covering overlay to keep focus on modal */
+  background: linear-gradient(180deg, rgba(18,18,18,0.95) 0%, rgba(34,12,12,0.95) 100%) !important;
+}
+
+body.dark-mode .user-edit-modal .inventory-product {
+  background: #141414 !important;
+  color: #eaeaea !important;
+  border-radius: 28px !important;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.7) !important;
+}
+
+body.dark-mode .user-edit-modal .modal-header-section .text-wrapper,
+body.dark-mode .user-edit-modal .modal-header-section .material-icons,
+body.dark-mode .user-edit-modal .text-wrapper,
+body.dark-mode .user-edit-modal .vector-wrapper .material-icons {
+  color: #ffffff !important;
+}
+
+body.dark-mode .user-edit-modal .picture-label,
+body.dark-mode .user-edit-modal .user-placeholder-icon {
+  color: #d3d3d3 !important;
+}
+
+body.dark-mode .user-edit-modal .rectangle {
+  background-color: #2a2a2a !important;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.6) !important;
+}
+
+body.dark-mode .user-edit-modal .download-icon,
+body.dark-mode .user-edit-modal .edit-icon {
+  background-color: rgba(255,255,255,0.05) !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.6) !important;
+}
+
+body.dark-mode .user-edit-modal .download-icon .material-icons,
+body.dark-mode .user-edit-modal .edit-icon .material-icons {
+  color: #eaeaea !important;
+}
+
+/* Labels and small headers inside the modal */
+body.dark-mode .user-edit-modal .text-wrapper-2,
+body.dark-mode .user-edit-modal .text-wrapper-9,
+body.dark-mode .user-edit-modal .form-row label {
+  color: #e7e7e7 !important;
+}
+
+/* Inputs in dark mode */
+body.dark-mode .user-edit-modal .input-field,
+body.dark-mode .user-edit-modal .input-id,
+body.dark-mode .user-edit-modal .input-role {
+  background: #0f0f0f !important;
+  color: #e6e6e6 !important;
+  border: 1px solid #333 !important;
+  box-shadow: none !important;
+}
+
+body.dark-mode .user-edit-modal .input-field::placeholder {
+  color: #bdbdbd !important;
+}
+
+body.dark-mode .user-edit-modal .input-field:focus,
+body.dark-mode .user-edit-modal .input-id:focus,
+body.dark-mode .user-edit-modal .input-role:focus {
+  border-color: #ff9f9f !important;
+  box-shadow: 0 0 0 6px rgba(255,159,159,0.06) !important;
+}
+
+/* Keep the pink divider visible and slightly brighter */
+body.dark-mode .user-edit-modal .divider {
+  background-color: #ff9f9f !important;
+}
+
+/* Bottom buttons: keep them light for contrast (matches the screenshot) */
+body.dark-mode .user-edit-modal .rectangle-2,
+body.dark-mode .user-edit-modal .rectangle-3 {
+  background: linear-gradient(0deg, #ffffff 0%, #e9e9e9 100%) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.5) !important;
+}
+
+/* Button labels should be dark for readability on the light buttons */
+body.dark-mode .user-edit-modal .text-wrapper-7,
+body.dark-mode .user-edit-modal .text-wrapper-8 {
+  color: #000000 !important;
+}
+
+/* Ensure role badges keep readable contrast */
+body.dark-mode .role-badge {
+  opacity: 0.95;
+}
+
+/* Dashboard-specific dark-mode visual fixes */
+/* 1) Make stat card text clearly white */
+body.dark-mode .stat-card {
+  background: #242424 !important;
+  color: #ffffff !important;
+}
+body.dark-mode .stat-card .stat-title,
+body.dark-mode .stat-card .stat-value,
+body.dark-mode .stat-card .stat-change,
+body.dark-mode .stat-card .stat-card-header .stat-icon {
+  color: #ffffff !important;
+}
+body.dark-mode .stat-change {
+  background: rgba(0,0,0,0.12) !important;
+  color: #e8fff0 !important;
+}
+
+/* 2) Make the orders / tables area dark and text white */
+body.dark-mode .orders-table,
+body.dark-mode .orders-table .table-header,
+body.dark-mode .orders-table .table-body,
+body.dark-mode .orders-table .table-row {
+  background: #0f0f0f !important;
+  color: #f3f3f3 !important;
+}
+body.dark-mode .orders-table .table-header {
+  border-bottom: 1px solid rgba(255,159,159,0.12) !important;
+}
+body.dark-mode .orders-table .table-row div {
+  color: #e6e6e6 !important;
+}
+
+/* 3) Ensure chart containers and pie widget use dark panels */
+body.dark-mode .chart-container,
+body.dark-mode .pie-container,
+body.dark-mode .analytics-grid > .chart-container,
+body.dark-mode .analytics-grid > .pie-container {
+  background: #141414 !important;
+  color: #ffffff !important;
+}
+
+/* Force chart titles, small labels and headings to white in dark mode */
+body.dark-mode .chart-title,
+body.dark-mode .chart-container .chart-title,
+body.dark-mode .pie-container .chart-title,
+body.dark-mode .main-content .header h1,
+body.dark-mode .main-content h1,
+body.dark-mode .main-content h2,
+body.dark-mode .main-content h3 {
+  color: #ffffff !important;
+}
+
+/* Day labels (Sun, Mon...) */
+body.dark-mode .day-label,
+body.dark-mode .day-label * {
+  color: #dcdcdc !important;
+}
+
+/* Ensure grid lines in simple-chart are subtle in dark mode */
+body.dark-mode .grid-line { background: rgba(255,255,255,0.06) !important; border-top-color: rgba(255,255,255,0.06) !important; }
+
+/* 4) Adjust scrollbar/thumb contrast in dark mode for table panels */
+body.dark-mode .orders-table::-webkit-scrollbar,
+body.dark-mode .table-body::-webkit-scrollbar {
+  width: 10px;
+}
+body.dark-mode .orders-table::-webkit-scrollbar-thumb,
+body.dark-mode .table-body::-webkit-scrollbar-thumb {
+  background: rgba(255,159,159,0.35);
+  border-radius: 8px;
+}
+
+/* Make selected / highlighted text readable in dark mode */
+body.dark-mode ::selection,
+body.dark-mode *::selection {
+  background: rgba(59,130,246,0.95); /* vivid blue selection */
+  color: #ffffff !important; /* ensure text is white when selected */
+}
+/* Firefox selection pseudo-element */
+body.dark-mode ::-moz-selection,
+body.dark-mode *::-moz-selection {
+  background: rgba(59,130,246,0.95);
+  color: #ffffff !important;
+}

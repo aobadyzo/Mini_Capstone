@@ -5,10 +5,11 @@
     <meta charset="utf-8" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="Orders.css" />
+    <link rel="stylesheet" href="dark-theme.css">
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar Navigation -->
+        
         <div class="sidebar">
             <div class="logo">
                 <div class="logo-icon">
@@ -70,10 +71,10 @@
             </div>
         </div>
 
-        <!-- Main Content -->
+        
         <div class="main-content">
             <div class="inventory-card">
-                <!-- Header -->
+                
                 <div class="header">
                     <h1 class="page-title">Orders</h1>
                     <div class="search-container">
@@ -82,12 +83,12 @@
                     </div>
                 </div>
 
-                <!-- Divider Bar -->
+                
                 <div class="divider-bar"></div>
 
-                <!-- Table Container -->
+                
                 <div class="table-container">
-                    <!-- Table Header -->
+                    
                     <div class="table-header">
                         <div>Order ID</div>
                         <div>Customer</div>
@@ -98,14 +99,14 @@
                         <div>Actions</div>
                     </div>
 
-                    <!-- Order Rows -->
+                    
                     <div id="ordersContainer"></div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Modal for Order Details -->
+    
     <div id="orderModal" class="order-modal">
         <div class="modal-overlay" onclick="closeOrderModal()"></div>
         <div class="modal-content">
@@ -115,6 +116,8 @@
         </div>
     </div>
 
+    <script src="nav.js"></script>
+    <script src="theme.js"></script>
     <script src="Orders.js"></script>
 </body>
 </html>
