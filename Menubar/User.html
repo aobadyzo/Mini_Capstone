@@ -6,11 +6,10 @@
     <title>User Management</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="User.css">
-    <link rel="stylesheet" href="dark-theme.css">
 </head>
 <body>
     <div class="container">
-        
+        <!-- Sidebar -->
         <div class="sidebar">
             <div class="logo">
                 <div class="logo-icon">
@@ -72,7 +71,7 @@
             </div>
         </div>
         
-        
+        <!-- Main Content -->
         <div class="main-content">
             <div class="user-card">
                 <div class="header">
@@ -139,191 +138,203 @@
         </div>
     </div>
     
-    
+    <!-- Add User Modal -->
     <div class="user-edit-modal" id="addModal">
         <div class="modal-overlay" onclick="closeAddModal()"></div>
         
         <div class="modal-container">
-            <div class="inventory-product"></div>
-            
-            <div class="frame-back" onclick="closeAddModal()">
-                <span class="material-icons">arrow_back</span>
-            </div>
-            
-            <div class="modal-header-section">
-                <div class="vector-wrapper">
-                    <span class="material-icons">person_add</span>
-                </div>
-                <div class="text-wrapper">Add New User</div>
-            </div>
-            
-            <div class="profile-picture-section">
-                <div class="rectangle" id="addProfilePicture">
-                    <img id="addProfileImage" style="display:none; width: 100%; height: 100%; object-fit: cover;">
-                    <span class="material-icons user-placeholder-icon" id="addPlaceholderIcon">person</span>
+            <div class="inventory-product">
+                    <div class="frame-back" onclick="closeAddModal()">
+                    <span class="material-icons">arrow_back</span>
                 </div>
                 
-                <div class="picture-label">&lt;Picture&gt;</div>
-                
-                
-                <div class="edit-icon" onclick="uploadAddPhoto()" title="Upload Profile Picture">
-                    <span class="material-icons">edit</span>
-                </div>
-            </div>
-            
-            <div class="id-role-section">
-                <div class="id-group">
-                    <label class="text-wrapper-2">ID :</label>
-                    <input type="text" class="input-id" id="addUserId" readonly>
+                <div class="modal-header-section">
+                    <div class="vector-wrapper">
+                        <span class="material-icons">person_add</span>
+                    </div>
+                    <div class="text-wrapper">Add New User</div>
                 </div>
                 
-                <div class="role-group">
-                    <label class="text-wrapper-9">Role :</label>
-                    <select class="input-role" id="addUserRole">
-                        <option value="Cashier">Cashier</option>
-                        <option value="Admin">Admin</option>
-                    </select>
+                <div class="user-edit-form-container">
+                    <div class="form-top">
+                        <div class="profile-picture-section">
+                            <div class="rectangle" id="addProfilePicture">
+                                <img id="addProfileImage" style="display:none; width: 100%; height: 100%; object-fit: cover;">
+                                <span class="material-icons user-placeholder-icon" id="addPlaceholderIcon">person</span>
+                            </div>
+                            
+                            <div class="picture-label">&lt;Picture&gt;</div>
+                            
+                            <!-- Edit Icon -->
+                            <div class="edit-icon" onclick="uploadAddPhoto()" title="Upload Profile Picture">
+                                <span class="material-icons">edit</span>
+                            </div>
+                        </div>
+                        
+                        <div class="id-role-section">
+                            <div class="id-group">
+                                <label class="text-wrapper-2">ID :</label>
+                                <input type="text" class="input-id" id="addUserId" readonly>
+                            </div>
+                            
+                            <div class="role-group">
+                                <label class="text-wrapper-9">Role :</label>
+                                <select class="input-role" id="addUserRole">
+                                    <option value="Staff">Staff</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Admin">Admin</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="form-bottom">
+                        <div class="form-fields">
+                            <div class="form-row">
+                                <label class="div">First Name :</label>
+                                <input type="text" class="input-field input-firstname" id="addFirstName" placeholder="Enter first name">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-3">Last Name :</label>
+                                <input type="text" class="input-field input-lastname" id="addLastName" placeholder="Enter last name">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-4">Email :</label>
+                                <input type="email" class="input-field input-email" id="addEmail" placeholder="Enter email address">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-5">Contact :</label>
+                                <input type="text" class="input-field input-contact" id="addContact" placeholder="Enter contact number">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-6">Address :</label>
+                                <input type="text" class="input-field input-address" id="addAddress" placeholder="Enter address">
+                            </div>
+                        </div>
+                        
+                        <div class="button-section">
+                            <div class="rectangle-2" onclick="clearAddForm()"></div>
+                            <div class="text-wrapper-7">Clear Form</div>
+                            
+                            <div class="rectangle-3" onclick="addNewUser()"></div>
+                            <div class="text-wrapper-8">Add User</div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="form-fields">
-                <div class="form-row">
-                    <label class="div">First Name :</label>
-                    <input type="text" class="input-field input-firstname" id="addFirstName" placeholder="Enter first name">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-3">Last Name :</label>
-                    <input type="text" class="input-field input-lastname" id="addLastName" placeholder="Enter last name">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-4">Email :</label>
-                    <input type="email" class="input-field input-email" id="addEmail" placeholder="Enter email address">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-5">Contact :</label>
-                    <input type="text" class="input-field input-contact" id="addContact" placeholder="Enter contact number">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-6">Address :</label>
-                    <input type="text" class="input-field input-address" id="addAddress" placeholder="Enter address">
-                </div>
-            </div>
-            
-            <div class="button-section">
-                <div class="rectangle-2" onclick="clearAddForm()"></div>
-                <div class="text-wrapper-7">Clear Form</div>
-                
-                <div class="rectangle-3" onclick="addNewUser()"></div>
-                <div class="text-wrapper-8">Add User</div>
             </div>
         </div>
         
-        
+        <!-- Hidden file input for image upload -->
         <input type="file" id="addImageUpload" accept="image/*" style="display: none;">
     </div>
     
-    
+    <!-- Edit User Modal -->
     <div class="user-edit-modal" id="editModal">
         <div class="modal-overlay" onclick="closeModal()"></div>
         
         <div class="modal-container">
-            <div class="inventory-product"></div>
-            
-            <div class="frame-back" onclick="closeModal()">
-                <span class="material-icons">arrow_back</span>
-            </div>
-            
-            <div class="modal-header-section">
-                <div class="vector-wrapper">
-                    <span class="material-icons">person</span>
-                </div>
-                <div class="text-wrapper">User</div>
-            </div>
-            
-            <div class="profile-picture-section">
-                <div class="rectangle" id="profilePicture">
-                    <img id="profileImage" style="display:none; width: 100%; height: 100%; object-fit: cover;">
-                    <span class="material-icons user-placeholder-icon" id="placeholderIcon">person</span>
+            <div class="inventory-product">
+                <div class="frame-back" onclick="closeModal()">
+                    <span class="material-icons">arrow_back</span>
                 </div>
                 
-                <div class="picture-label">&lt;Picture&gt;</div>
-                
-                
-                <div class="download-icon" onclick="downloadPhoto()" title="Download Profile Picture">
-                    <span class="material-icons">download</span>
+                <div class="modal-header-section">
+                    <div class="vector-wrapper">
+                        <span class="material-icons">person</span>
+                    </div>
+                    <div class="text-wrapper">User</div>
+                </div>
+                <div class="user-edit-form-container">
+                    <div class="form-top">
+                        <div class="profile-picture-section">
+                            <div class="rectangle" id="profilePicture">
+                                <img id="profileImage" style="display:none; width: 100%; height: 100%; object-fit: cover;">
+                                <span class="material-icons user-placeholder-icon" id="placeholderIcon">person</span>
+                            </div>
+                            
+                            <div class="picture-label">&lt;Picture&gt;</div>
+                            
+                            <!-- Download Icon -->
+                            <div class="download-icon" onclick="downloadPhoto()" title="Download Profile Picture">
+                                <span class="material-icons">download</span>
+                            </div>
+                            
+                            <!-- Edit Icon -->
+                            <div class="edit-icon" onclick="uploadPhoto()" title="Edit Profile Picture">
+                                <span class="material-icons">edit</span>
+                            </div>
+                        </div>
+                        
+                        <div class="id-role-section">
+                            <div class="id-group">
+                                <label class="text-wrapper-2">ID :</label>
+                                <input type="text" class="input-id" id="editUserId" readonly>
+                            </div>
+                            
+                            <div class="role-group">
+                                <label class="text-wrapper-9">Role :</label>
+                                <select class="input-role" id="editUserRole">
+                                    <option value="Admin">Admin</option>
+                                    <option value="Manager">Manager</option>
+                                    <option value="Staff">Staff</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="divider"></div>
+                    
+                    <div class="form-bottom">
+                        <div class="form-fields">
+                            <div class="form-row">
+                                <label class="div">First Name :</label>
+                                <input type="text" class="input-field input-firstname" id="editFirstName">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-3">Last Name :</label>
+                                <input type="text" class="input-field input-lastname" id="editLastName">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-4">Email :</label>
+                                <input type="email" class="input-field input-email" id="editEmail">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-5">Contact :</label>
+                                <input type="text" class="input-field input-contact" id="editContact">
+                            </div>
+                            
+                            <div class="form-row">
+                                <label class="text-wrapper-6">Address :</label>
+                                <input type="text" class="input-field input-address" id="editAddress">
+                            </div>
+                        </div>
+                        
+                        <div class="button-section">
+                            <div class="rectangle-2" onclick="resetPassword()"></div>
+                            <div class="text-wrapper-7">Reset Password</div>
+                            
+                            <div class="rectangle-3" onclick="saveUser()"></div>
+                            <div class="text-wrapper-8">Save</div>
+                        </div>
+                    </div>
                 </div>
                 
-                
-                <div class="edit-icon" onclick="uploadPhoto()" title="Edit Profile Picture">
-                    <span class="material-icons">edit</span>
-                </div>
-            </div>
-            
-            <div class="id-role-section">
-                <div class="id-group">
-                    <label class="text-wrapper-2">ID :</label>
-                    <input type="text" class="input-id" id="editUserId" readonly>
-                </div>
-                
-                <div class="role-group">
-                    <label class="text-wrapper-9">Role :</label>
-                    <select class="input-role" id="editUserRole">
-                        <option value="Admin">Admin</option>
-                        <option value="Cashier">Cashier</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="divider"></div>
-            
-            <div class="form-fields">
-                <div class="form-row">
-                    <label class="div">First Name :</label>
-                    <input type="text" class="input-field input-firstname" id="editFirstName">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-3">Last Name :</label>
-                    <input type="text" class="input-field input-lastname" id="editLastName">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-4">Email :</label>
-                    <input type="email" class="input-field input-email" id="editEmail">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-5">Contact :</label>
-                    <input type="text" class="input-field input-contact" id="editContact">
-                </div>
-                
-                <div class="form-row">
-                    <label class="text-wrapper-6">Address :</label>
-                    <input type="text" class="input-field input-address" id="editAddress">
-                </div>
-            </div>
-            
-            <div class="button-section">
-                <div class="rectangle-2" onclick="resetPassword()"></div>
-                <div class="text-wrapper-7">Reset Password</div>
-                
-                <div class="rectangle-3" onclick="saveUser()"></div>
-                <div class="text-wrapper-8">Save</div>
             </div>
         </div>
         
-        
+        <!-- Hidden file input for image upload -->
         <input type="file" id="imageUpload" accept="image/*" style="display: none;">
     </div>
     
-    <script src="nav.js"></script>
-    <script src="theme.js"></script>
     <script src="User.js"></script>
 </body>
 </html>
