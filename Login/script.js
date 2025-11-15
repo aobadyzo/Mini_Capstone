@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             } catch(e) {  }
                             try {
                                 if ((user.Role || '').toLowerCase() === 'cashier') {
-                                    // CreateOrder is located under Cashier/POS
+                                    
                                     window.location.href = `${baseUrl}/Cashier/POS/CreateOrder.html`;
                                 } else {
                                     window.location.href = `${baseUrl}/Menubar/Inventory.html`;
