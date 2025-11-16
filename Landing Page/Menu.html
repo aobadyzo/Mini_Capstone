@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <title>Elisha Bay - Our Products</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" />
+  <link rel="stylesheet" href="Menu.css" />
+</head>
+<body>
+  <div class="frame">
+    <header class="header" id="header">
+      <a href="#home" class="logo">Elisha Bay</a>
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#home" class="nav-link">
+              <span class="material-symbols-outlined">home</span>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#menu" class="nav-link">
+              <span class="material-symbols-outlined">restaurant_menu</span>
+              <span>Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#about" class="nav-link">
+              <span class="material-symbols-outlined">info</span>
+              <span>About Us</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link">
+              <span class="material-symbols-outlined">call</span>
+              <span>Contact Us</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="auth-container">
+        <a href="#cart" class="cart-link">
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </a>
+        <a href="#register" class="auth-link">Register</a>
+        <span class="auth-separator"></span>
+        <a href="#login" class="auth-link">Login</a>
+      </div>
+    </header>
+
+    <main>
+      <h1 class="page-title">Our <span class="highlight">Products</span></h1>
+      <p class="page-subtitle">Discover our selection of premium seafood products from Dagupan Bay</p>
+      
+      <div class="search-container">
+        <div class="search-wrapper">
+          <input 
+            type="search" 
+            class="search-input" 
+            placeholder="Search for products..." 
+            aria-label="Search products"
+          />
+          <span class="material-symbols-outlined search-icon">search</span>
+        </div>
+      </div>
+      
+      <div class="product-grid">
+        <article class="product-card">
+          <div class="product-image-container">
+            <div class="product-image"></div>
+            <span class="product-badge">Fresh</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Dagupan Bangus</h3>
+            <p class="product-description">Premium milkfish sourced fresh from Dagupan Bay, known for its tender meat and rich flavor.</p>
+            <div class="product-footer">
+              <div class="product-price">
+                <span class="price-label">PHP</span>
+                <span class="price-value">150</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <span class="material-symbols-outlined" style="font-size: 18px;">add_shopping_cart</span>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </article>
+        
+        <article class="product-card">
+          <div class="product-image-container">
+            <div class="product-image"></div>
+            <span class="product-badge">Popular</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Boneless Bangus</h3>
+            <p class="product-description">Carefully deboned milkfish, perfect for quick and easy cooking without compromising taste.</p>
+            <div class="product-footer">
+              <div class="product-price">
+                <span class="price-label">PHP</span>
+                <span class="price-value">200</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <span class="material-symbols-outlined" style="font-size: 18px;">add_shopping_cart</span>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </article>
+        
+        <article class="product-card">
+          <div class="product-image-container">
+            <div class="product-image"></div>
+            <span class="product-badge">New</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Marinated Bangus</h3>
+            <p class="product-description">Pre-seasoned milkfish with our secret blend of spices, ready to cook for your convenience.</p>
+            <div class="product-footer">
+              <div class="product-price">
+                <span class="price-label">PHP</span>
+                <span class="price-value">180</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <span class="material-symbols-outlined" style="font-size: 18px;">add_shopping_cart</span>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </article>
+        
+        <article class="product-card">
+          <div class="product-image-container">
+            <div class="product-image"></div>
+            <span class="product-badge">Special</span>
+          </div>
+          <div class="product-info">
+            <h3 class="product-name">Smoked Bangus</h3>
+            <p class="product-description">Traditionally smoked milkfish with a distinctive aroma and savory taste, a local delicacy.</p>
+            <div class="product-footer">
+              <div class="product-price">
+                <span class="price-label">PHP</span>
+                <span class="price-value">220</span>
+              </div>
+              <button class="add-to-cart-btn">
+                <span class="material-symbols-outlined" style="font-size: 18px;">add_shopping_cart</span>
+                Add to Cart
+              </button>
+            </div>
+          </div>
+        </article>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2>Elisha Bay</h2>
+          <p>Seas the bay with Elisha Bay</p>
+        </div>
+        <nav class="footer-nav footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-contact footer-section">
+          <h3>Contact</h3>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">call</span> 
+            <a href="tel:09192701448">0919 270 1448</a>
+          </p>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">email</span> 
+            <a href="mailto:raiisagv@yahoo.com.ph">raiisagv@yahoo.com.ph</a>
+          </p>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">location_on</span> 
+            148 BRGY.MANGIN, Dagupan City, 2400 Pangasinan
+          </p>
+        </div>
+        <div class="footer-social footer-section">
+          <h3>Follow Us</h3>
+          <a href="#facebook" class="social-link">
+            <span class="material-symbols-outlined" style="font-size: 20px;">share</span>
+            Facebook
+          </a>
+        </div>
+      </div>
+      <p class="copyright">© 2025 Elisha Bay. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="Menu.js"></script>
+</body>
+</html>

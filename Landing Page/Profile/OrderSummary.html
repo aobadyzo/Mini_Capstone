@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Elisha Bay - Order Summary</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="OrderSummary.css" />
+</head>
+<body>
+  <div class="frame">
+    <header class="header">
+      <a href="#home" class="logo">Elisha Bay</a>
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#home" class="nav-link">
+              <span class="material-symbols-outlined">home</span>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#menu" class="nav-link">
+              <span class="material-symbols-outlined">restaurant_menu</span>
+              <span>Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#about" class="nav-link">
+              <span class="material-symbols-outlined">info</span>
+              <span>About Us</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link">
+              <span class="material-symbols-outlined">call</span>
+              <span>Contact Us</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="auth-container">
+        <a href="#cart" class="cart-link">
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </a>
+        <a href="#profile" class="profile-link">
+          <span class="material-symbols-outlined">person</span>
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <h1 class="page-title">Profile</h1>
+      
+      <div class="profile-container">
+        <!-- Profile Sidebar -->
+        <aside class="profile-sidebar">
+          <div class="profile-info">
+            <div class="profile-avatar"></div>
+            <h3 class="profile-name">Username</h3>
+            <p class="profile-email">emailaddress@example.com</p>
+          </div>
+          
+          <nav class="profile-nav">
+            <a href="#orders" class="profile-nav-item active">Orders</a>
+            <a href="#settings" class="profile-nav-item">Settings</a>
+            <button class="logout-btn">Log Out</button>
+          </nav>
+        </aside>
+
+        <!-- Order Summary Section -->
+        <section class="order-summary-section">
+          <h2 class="section-title">Order Summary</h2>
+          
+          <!-- Shipping Information -->
+          <div class="info-card">
+            <h3 class="info-card-title">Shipping Information</h3>
+            <div class="shipping-details">
+              <div class="shipping-item">Courier: LBC</div>
+              <div class="shipping-item">Tracking No.: 123456789</div>
+            </div>
+          </div>
+          
+          <!-- Delivery Information -->
+          <div class="info-card">
+            <h3 class="info-card-title">Delivery Information</h3>
+            <div class="info-row">
+              <span class="info-label">Name:</span>
+              <span class="info-value">John Doe</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Address:</span>
+              <span class="info-value">148 BRGY.MANGIN, Dagupan City, 2400 Pangasinan</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Email Address:</span>
+              <span class="info-value">john.doe@example.com</span>
+            </div>
+            <div class="info-row">
+              <span class="info-label">Phone Number:</span>
+              <span class="info-value">0919 270 1448</span>
+            </div>
+          </div>
+          
+          <!-- Order Information -->
+          <div class="products-container">
+            <h3 class="info-card-title">Order Information:</h3>
+            <div class="products-grid">
+              <article class="product-card">
+                <div class="product-image"></div>
+                <div class="product-info">
+                  <h4 class="product-name">Seafood Platter</h4>
+                  <p class="product-quantity">Quantity: 2</p>
+                  <p class="product-price">Price: ₱500.00</p>
+                </div>
+              </article>
+              
+              <article class="product-card">
+                <div class="product-image"></div>
+                <div class="product-info">
+                  <h4 class="product-name">Grilled Fish</h4>
+                  <p class="product-quantity">Quantity: 1</p>
+                  <p class="product-price">Price: ₱300.00</p>
+                </div>
+              </article>
+              
+              <article class="product-card">
+                <div class="product-image"></div>
+                <div class="product-info">
+                  <h4 class="product-name">Shrimp Special</h4>
+                  <p class="product-quantity">Quantity: 3</p>
+                  <p class="product-price">Price: ₱450.00</p>
+                </div>
+              </article>
+              
+              <article class="product-card">
+                <div class="product-image"></div>
+                <div class="product-info">
+                  <h4 class="product-name">Crab Delight</h4>
+                  <p class="product-quantity">Quantity: 1</p>
+                  <p class="product-price">Price: ₱250.00</p>
+                </div>
+              </article>
+            </div>
+          </div>
+          
+          <!-- Order Footer -->
+          <div class="order-footer">
+            <div class="order-total">
+              <span class="total-text">Order </span>
+              <span class="total-highlight">Total</span>
+              <span class="total-text">: ₱1,500.00</span>
+            </div>
+            <button class="close-btn">Close</button>
+          </div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2>Elisha Bay</h2>
+          <p>Seas the bay with Elisha Bay</p>
+        </div>
+        <nav class="footer-nav footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-contact footer-section">
+          <h3>Contact</h3>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">call</span> 
+            <a href="tel:09192701448">0919 270 1448</a>
+          </p>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">email</span> 
+            <a href="mailto:raiisagv@yahoo.com.ph">raiisagv@yahoo.com.ph</a>
+          </p>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">location_on</span> 
+            148 BRGY.MANGIN, Dagupan City, 2400 Pangasinan
+          </p>
+        </div>
+        <div class="footer-social footer-section">
+          <h3>Follow Us</h3>
+          <a href="#facebook" class="social-link">
+            <span class="material-symbols-outlined" style="font-size: 20px;">share</span>
+            Facebook
+          </a>
+        </div>
+      </div>
+      <p class="copyright">© 2025 Elisha Bay. All rights reserved.</p>
+    </footer>
+  </div>
+
+  <script src="OrderSummary.js"></script>
+</body>
+</html>
