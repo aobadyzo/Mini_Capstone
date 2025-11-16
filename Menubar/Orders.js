@@ -1,4 +1,4 @@
-// Orders Data
+
 const ordersData = [
     {
         id: 'ORD-001',
@@ -110,9 +110,7 @@ const ordersData = [
             { name: 'Ground Beef', quantity: 3, price: '$210.00' }
         ]
     }
-];
-
-// Render Orders
+];
 function renderOrders(orders = ordersData) {
     const container = document.getElementById('ordersContainer');
     
@@ -136,9 +134,7 @@ function renderOrders(orders = ordersData) {
             </div>
         </div>
     `).join('');
-}
-
-// Approve Order
+}
 function approveOrder(event, orderId) {
     event.stopPropagation();
     const order = ordersData.find(o => o.id === orderId);
@@ -147,9 +143,7 @@ function approveOrder(event, orderId) {
         renderOrders();
         showNotification(`Order ${orderId} approved!`, 'success');
     }
-}
-
-// Cancel Order
+}
 function cancelOrder(event, orderId) {
     event.stopPropagation();
     const order = ordersData.find(o => o.id === orderId);
@@ -158,9 +152,7 @@ function cancelOrder(event, orderId) {
         renderOrders();
         showNotification(`Order ${orderId} cancelled!`, 'error');
     }
-}
-
-// Show Notification
+}
 function showNotification(message, type) {
     const notification = document.createElement('div');
     notification.textContent = message;
@@ -182,9 +174,7 @@ function showNotification(message, type) {
         notification.style.animation = 'slideOut 0.3s ease-out';
         setTimeout(() => notification.remove(), 300);
     }, 2000);
-}
-
-// View Order Details
+}
 function viewOrderDetails(orderId) {
     const order = ordersData.find(o => o.id === orderId);
     if (!order) return;
@@ -237,14 +227,10 @@ function viewOrderDetails(orderId) {
     `;
     
     document.getElementById('orderModal').classList.add('active');
-}
-
-// Close Modal
+}
 function closeOrderModal() {
     document.getElementById('orderModal').classList.remove('active');
-}
-
-// Search Functionality
+}
 const searchInput = document.getElementById('searchInput');
 
 searchInput.addEventListener('input', (e) => {
@@ -257,16 +243,35 @@ searchInput.addEventListener('input', (e) => {
         order.payment.toLowerCase().includes(searchTerm)
     );
     renderOrders(filteredOrders);
-});
-
-// Close modal with Escape key
+});
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') {
         closeOrderModal();
     }
-});
-
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', () => {
+});
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const res = await fetch('http://localhost:3001/api/orders');
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.rows) && json.rows.length) {
+            const apiOrders = json.rows.map(r => ({
+                id: r.OrderNumber || (`ORD-${String(r.OrderId).padStart(3,'0')}`),
+                customer: r.CustomerName || 'Customer',
+                totalItems: r.TotalItems || 0,
+                payment: r.PaymentMethod || r.Payment || 'N/A',
+                status: (r.Status || 'pending').toLowerCase(),
+                address: r.ShippingAddress || r.Address || '',
+                date: r.OrderDate || '',
+                totalPrice: r.TotalPrice || r.TotalAmount || '$0.00',
+                items: []
+            }));
+            ordersData.length = 0;
+            ordersData.push(...apiOrders);
+            renderOrders(ordersData);
+            return;
+        }
+    } catch (e) {
+        console.warn('Orders API not available', e);
+    }
     renderOrders();
 });

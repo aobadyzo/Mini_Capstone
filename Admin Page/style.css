@@ -146,7 +146,7 @@ aside .close{
     display: none;
 }
 
-/* side bar */
+
 aside .sidebar{
     display: flex;
     flex-direction: column;
@@ -174,9 +174,9 @@ aside .sidebar a span{
 }
 
 aside .sidebar a:last-child{
-    margin-top: auto;  /* Pushes logout to bottom */
-    width: auto;       /* Natural width, aligned left */
-    position: static;  /* Keeps in flow */
+    margin-top: auto;  
+    width: auto;       
+    position: static;  
 }
 
 aside .sidebar a:active{
@@ -204,7 +204,7 @@ aside .sidebar a:hover{
 aside .sidebar a:hover{
     margin-left: 1rem;
 }
-/* msg color notifier */
+
 aside .sidebar .message-count{
     background: var(--color-danger);
     color: var(--color-white);
@@ -213,7 +213,7 @@ aside .sidebar .message-count{
     border-radius: var(--border-radius-1);
 }
 
-/* Main */
+
 
 main{
     margin-top: 1.4rem;
@@ -341,7 +341,7 @@ main .insights small{
     margin-top: 1.3rem;
     display: block;
 }
-/* recent order */
+
 main .recent-orders{
     margin-top: 2rem;
 }
@@ -381,7 +381,7 @@ main .recent-orders a{
     color: var(--color-primary);
 }
 
-/* right */
+
 .right{
     margin-top: 1.4rem;
 }
@@ -428,7 +428,7 @@ main .recent-orders a{
     text-align: right;
 }
 
-/* recent updates */
+
 .right .recent-updates{
     margin-top: 2rem;
 }
@@ -456,7 +456,7 @@ main .recent-orders a{
     margin-bottom: 1rem;
 }
 
-/* sales analytics */
+
 .right .sales-analytics{
     margin-top: 2rem;
 }
@@ -524,7 +524,7 @@ main .recent-orders a{
     font-weight: 600;
 }
 
-/* media queries */
+
 @media screen and (max-width: 1200px){
     .container{
         width: 94%;
@@ -576,7 +576,7 @@ main .recent-orders a{
     }
 }
 
-/* media queries */
+
 @media screen and (max-width: 768px) {
     .container {
         width: 100%;
@@ -613,8 +613,8 @@ main .recent-orders a{
     }
 
     aside .sidebar a:last-child{
-        margin-top: auto;  /* Pushes to bottom in mobile */
-        position: static;  /* Keeps in flow */
+        margin-top: auto;  
+        position: static;  
         width: auto;
     }
 

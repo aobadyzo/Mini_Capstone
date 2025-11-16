@@ -19,7 +19,7 @@ html, body {
     position: relative;
 }
 
-/* Sidebar */
+
 .sidebar {
     position: absolute;
     top: 0;
@@ -79,7 +79,7 @@ html, body {
     top: 290px;
 }
 
-/* Main content area */
+
 .main-content {
     position: absolute;
     top: 0;
@@ -89,7 +89,7 @@ html, body {
     background: linear-gradient(180deg, rgba(253, 253, 255, 1) 0%, rgba(245, 158, 158, 1) 100%);
 }
 
-/* Search bar */
+
 .search-bar {
     position: absolute;
     top: 19px;
@@ -128,7 +128,7 @@ html, body {
     font-family: 'Inter', Helvetica;
 }
 
-/* Products area */
+
 .products-container {
     position: absolute;
     top: 98px;
@@ -228,7 +228,7 @@ html, body {
     box-shadow: 0 2px 4px rgba(245, 158, 158, 0.2);
 }
 
-/* Cart area */
+
 .cart-container {
     position: absolute;
     top: 98px;
@@ -318,7 +318,7 @@ html, body {
     color: white;
 }
 
-/* Popup modal */
+
 .modal {
     display: none;
     position: fixed;
@@ -424,7 +424,7 @@ html, body {
     opacity: 0.8;
 }
 
-/* Edit name modal */
+
 .edit-name-input {
     width: 100%;
     padding: 10px;

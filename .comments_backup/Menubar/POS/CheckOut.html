@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>POS Order Summary</title>
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="CheckOut.css">
+</head>
+<body>
+  <div class="container">
+    <!-- Sidebar Menu -->
+    <div class="sidebar">
+      <div class="menu-item menu-create-order">
+        <span class="material-icons">edit_document</span>
+        <span>Create Order</span>
+      </div>
+      <div class="menu-item menu-orders">
+        <span class="material-icons">receipt_long</span>
+        <span>Orders</span>
+      </div>
+      <div class="menu-item menu-settings">
+        <span class="material-icons">settings</span>
+        <span>Settings</span>
+      </div>
+      <div class="menu-item menu-logout">
+        <span class="material-icons">logout</span>
+        <span>Logout</span>
+      </div>
+    </div>
+
+    <!-- Main Content Boxes -->
+    <div class="main-box"></div>
+    <div class="side-box"></div>
+
+    <!-- Order Summary Title -->
+    <span class="title">Order Summary</span>
+
+    <!-- Product Subtotal Section -->
+    <div class="section-box product-subtotal">
+      <div class="section-header">
+        <span class="bullet">• </span>
+        <span class="title-text">Product Subtotal</span>
+      </div>
+      <div class="section-content">
+        <div class="row">
+          <span>Original Price :</span>
+          <span></span>
+        </div>
+        <div class="row" style="margin-bottom: 0;">
+          <span>Bulk Price :</span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping Subtotal Section -->
+    <div class="section-box shipping-subtotal">
+      <div class="section-header">
+        <span class="bullet">• </span>
+        <span class="title-text">Shipping Subtotal</span>
+      </div>
+      <div class="section-content">
+        <div class="row">
+          <span>Shipping fee :</span>
+          <span></span>
+        </div>
+        <div class="row" style="margin-bottom: 0;">
+          <span>Shipping discount :</span>
+          <span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Total Section -->
+    <div class="section-box total-section">
+      <span class="bullet">• </span>
+      <span class="title-text" style="margin-left: 5px;">Total :</span>
+    </div>
+
+    <!-- Delivery Options -->
+    <div class="section-box delivery-options">
+      <div class="section-header">
+        <span class="bullet">• </span>
+        <span class="title-text">Delivery Option</span>
+      </div>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          <input type="checkbox">
+          Walk-in
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox">
+          Delivery
+        </label>
+      </div>
+    </div>
+
+    <!-- Address Section -->
+    <div class="section-box address-section">
+      <div class="section-header" style="margin-bottom: 8px;">
+        <span class="bullet">• </span>
+        <span class="title-text">Address</span>
+      </div>
+      <div class="input-row">
+        <span>Address :</span>
+        <input type="text" placeholder="Enter address">
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="section-box contact-section">
+      <div class="section-header" style="margin-bottom: 8px;">
+        <span class="bullet">• </span>
+        <span class="title-text">Contact</span>
+      </div>
+      <div class="input-row">
+        <span>Contact Number :</span>
+        <input type="text" placeholder="Enter contact number">
+      </div>
+    </div>
+
+    <!-- Product Info Section -->
+    <div class="section-box product-info">
+      <div class="section-header">
+        <span class="bullet">• </span>
+        <span class="title-text">Product</span>
+      </div>
+      <div class="section-content">
+        <div style="font-size: 16px; margin-bottom: 10px;">Product Name :</div>
+        <div style="font-size: 16px;">Amount :</div>
+      </div>
+    </div>
+
+    <!-- Payment Method Section -->
+    <div class="section-box payment-method">
+      <div class="section-header">
+        <span class="bullet">• </span>
+        <span class="title-text">Payment Method</span>
+      </div>
+      <div class="checkbox-group">
+        <label class="checkbox-label">
+          Gcash e-Wallet :
+          <input type="checkbox">
+        </label>
+        <label class="checkbox-label">
+          Cash on Delivery :
+          <input type="checkbox">
+        </label>
+        <label class="checkbox-label">
+          Credit/Debit :
+          <input type="checkbox">
+        </label>
+      </div>
+    </div>
+
+    <!-- Checkout Button -->
+    <div class="checkout-button">
+      <span>Checkout</span>
+    </div>
+  </div>
+
+  <script src="CheckOut.js"></script>
+</body>
+</html>

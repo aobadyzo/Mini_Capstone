@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS System</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
+    <link rel="stylesheet" href="Cashier.css">
+</head>
+<body>
+    <div class="POS">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="menu-item menu-create-order">
+                <span class="material-icons">edit_document</span>
+                <span>Create Order</span>
+            </div>
+            <div class="menu-item menu-orders">
+                <span class="material-icons">receipt_long</span>
+                <span>Orders</span>
+            </div>
+            <div class="menu-item menu-settings">
+                <span class="material-icons">settings</span>
+                <span>Settings</span>
+            </div>
+            <div class="menu-item menu-logout">
+                <span class="material-icons">logout</span>
+                <span>Logout</span>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Search Bar -->
+            <div class="search-bar">
+                <div class="search-icon">
+                    <span class="material-icons">search</span>
+                </div>
+                <input type="text" id="searchInput" class="search-input" placeholder="Search products...">
+            </div>
+
+            <!-- Products Container -->
+            <div class="products-container">
+                <div class="products-grid" id="productsGrid"></div>
+            </div>
+
+            <!-- Cart Container -->
+            <div class="cart-container">
+                <div class="cart-items" id="cartItems"></div>
+                <button class="proceed-btn" id="proceedBtn">Proceed</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quantity Modal -->
+    <div id="quantityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Add to Cart</div>
+            <div class="quantity-label">Quantity</div>
+            <div class="quantity-control">
+                <input type="number" id="quantityInput" class="quantity-input" value="1" min="1">
+                <div class="quantity-buttons">
+                    <button class="qty-btn" id="incrementBtn">▲</button>
+                    <button class="qty-btn" id="decrementBtn">▼</button>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="modal-btn add-btn" id="confirmAddBtn">Add</button>
+                <button class="modal-btn cancel-btn" id="cancelQuantityBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Name Modal -->
+    <div id="editNameModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">Edit Product Name</div>
+            <input type="text" id="editNameInput" class="edit-name-input">
+            <div class="modal-actions">
+                <button class="modal-btn add-btn" id="confirmEditBtn">Save</button>
+                <button class="modal-btn cancel-btn" id="cancelEditBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="Cashier.js"></script>
+</body>
+</html>

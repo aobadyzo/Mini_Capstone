@@ -383,6 +383,8 @@ body {
     background-color: #ffffff;
     border-radius: 37px;
     box-shadow: 0px 4px 4px #000000;
+    display: flex;
+    padding: 30px 35px;
 }
 
 .user-edit-modal .frame-back {
@@ -418,6 +420,29 @@ body {
     gap: 10px;
 }
 
+.user-edit-modal .user-edit-form-container{
+    position: relative;
+    display: flex;
+    justify-content: start;
+    flex-direction: column;
+    margin-top: 60px;
+    padding: .75rem;
+    width: 100%;
+}
+
+.user-edit-modal .user-edit-form-container .form-top{
+    display: flex;
+    flex-direction: row;
+    gap: 120px;
+}
+
+.user-edit-modal .user-edit-form-container .form-bottom{
+    display: flex;
+    flex-direction: column;
+    padding: 0 2rem;
+    justify-content: space-between;
+}
+
 .user-edit-modal .text-wrapper {
     font-family: "Inter", Helvetica;
     font-weight: 400;
@@ -443,9 +468,9 @@ body {
 
 /* Profile Picture Section */
 .profile-picture-section {
-    position: absolute;
-    top: 70px;
-    left: 60px;
+    position: relative;
+    width: fit-content;
+    flex: none;
 }
 
 .user-edit-modal .rectangle {
@@ -468,8 +493,9 @@ body {
 
 .user-edit-modal .picture-label {
     position: absolute;
-    top: 70px;
-    left: 49px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     font-family: "Inter", Helvetica;
     font-weight: 400;
     color: #000000;
@@ -482,8 +508,8 @@ body {
 /* Download Icon */
 .download-icon {
     position: absolute;
-    top: 25px;
-    left: -28px;
+    top: 0;
+    left: 0;
     width: 36px;
     height: 36px;
     background-color: #000000;
@@ -509,8 +535,8 @@ body {
 /* Edit Icon */
 .edit-icon {
     position: absolute;
-    top: 75px;
-    left: -28px;
+    bottom: 0;
+    right: 0;
     width: 36px;
     height: 36px;
     background-color: #000000;
@@ -535,9 +561,10 @@ body {
 
 /* ID and Role Section */
 .id-role-section {
-    position: absolute;
-    top: 75px;
-    left: 280px;
+    position: relative;
+    display: flex;
+    flex: auto;
+    flex-direction: column;
 }
 
 .id-group {
@@ -593,9 +620,7 @@ body {
 }
 
 .user-edit-modal .divider {
-    position: absolute;
-    top: 185px;
-    left: 60px;
+    position: relative;
     width: 1230px;
     height: 8px;
     background-color: #f59e9e;
@@ -604,14 +629,17 @@ body {
 
 /* Form Fields */
 .form-fields {
-    position: absolute;
-    top: 225px;
-    left: 60px;
+    position: relative;
+    display: flex;
     width: 100%;
+    flex-direction: column;
+    justify-content: start;
+    align-items: start;
 }
 
 .form-row {
     display: flex;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 18px;
 }
@@ -662,9 +690,8 @@ body {
 
 /* Button Section */
 .button-section {
-    position: absolute;
-    bottom: 35px;
-    left: 60px;
+    position: relative;
+    display: flex;
 }
 
 .user-edit-modal .rectangle-2 {

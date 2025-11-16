@@ -6,10 +6,11 @@
     <title>Inventory Management</title>
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="Inventory.css">
+            <link rel="stylesheet" href="dark-theme.css">
 </head>
 <body>
     <div class="container">
-        <!-- Sidebar -->
+        
         <div class="sidebar">
             <div class="logo">
                 <div class="logo-icon">
@@ -71,7 +72,7 @@
             </div>
         </div>
         
-        <!-- Main Content -->
+        
         <div class="main-content">
             <div class="inventory-card">
                 <div class="header">
@@ -97,7 +98,7 @@
                     </div>
                     
                     <div id="inventoryList">
-                        <!-- Items will be dynamically added here -->
+                        
                     </div>
                 </div>
                 
@@ -139,7 +140,7 @@
         </div>
     </div>
     
-    <!-- Add Product Modal -->
+    
     <div class="modal" id="addModal">
         <div class="modal-content">
             <div class="modal-header">Add New Product</div>
@@ -180,13 +181,13 @@
                 <input type="text" class="form-input" id="expirationDate" placeholder="MM-YYYY">
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="addProduct()">Add Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="addProduct()">Add Product</button>
             </div>
         </div>
     </div>
     
-    <!-- Adjust Stock Modal -->
+    
     <div class="modal" id="adjustModal">
         <div class="modal-content">
             <div class="modal-header">Adjust Stock</div>
@@ -218,13 +219,13 @@
                 </select>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="adjustStock()">Update Stock</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="adjustStock()">Update Stock</button>
             </div>
         </div>
     </div>
     
-    <!-- Restock Product Modal -->
+    
     <div class="modal" id="restockModal">
         <div class="modal-content">
             <div class="modal-header">Restock Product</div>
@@ -243,13 +244,13 @@
                 <input type="text" class="form-input" id="restockExpiration" placeholder="MM-YYYY (optional)">
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="restockProduct()">Restock</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button id="restockBtn" type="button" class="btn btn-primary" onclick="restockProduct()">Restock</button>
             </div>
         </div>
     </div>
     
-    <!-- Disposal Modal -->
+    
     <div class="modal" id="disposalModal">
         <div class="modal-content">
             <div class="modal-header">Product Disposal</div>
@@ -261,7 +262,9 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Batch Number</label>
-                <input type="text" class="form-input" id="disposalBatchNumber" placeholder="Enter batch number">
+                <select class="form-select" id="disposalBatchNumber">
+                    <option value="">Select a batch</option>
+                </select>
             </div>
             <div class="form-group">
                 <label class="form-label">Quantity to Dispose</label>
@@ -288,12 +291,14 @@
                 <textarea class="form-input" id="disposalNotes" rows="3" placeholder="Optional notes about disposal"></textarea>
             </div>
             <div class="modal-buttons">
-                <button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
-                <button class="btn btn-primary" onclick="disposeProduct()">Dispose Product</button>
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="disposeProduct()">Dispose Product</button>
             </div>
         </div>
     </div>
     
+    <script src="nav.js"></script>
+    <script src="theme.js"></script>
     <script src="Inventory.js"></script>
 </body>
 </html>

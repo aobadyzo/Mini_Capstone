@@ -24,7 +24,7 @@ body {
   padding: 20px;
 }
 
-/* Sidebar Navigation */
+
 .sidebar {
   width: 200px;
   padding: 20px;
@@ -174,7 +174,7 @@ body {
   background: rgba(245, 158, 158, 0.2);
 }
 
-/* Main Content */
+
 .main-content {
   flex: 1;
   margin-left: 20px;
@@ -219,7 +219,7 @@ body {
   min-height: 700px;
 }
 
-/* Chart Container */
+
 .chart-container {
   background: #ffffff;
   padding: 32px;
@@ -258,7 +258,7 @@ body {
   border-bottom: 1px solid rgba(0, 0, 0, 0.15);
 }
 
-/* Line Chart SVG */
+
 .line-chart {
   position: absolute;
   top: 0;
@@ -345,7 +345,7 @@ body {
   transform: translate(-50%, -50%);
 }
 
-/* Stats Section */
+
 .divider {
   height: 10px;
   background: #f59d9d;
@@ -403,7 +403,7 @@ body {
   box-shadow: 0px 8px 16px rgba(140, 140, 140, 0.4);
 }
 
-/* Table */
+
 .data-table {
   border-collapse: collapse;
   width: 100%;
