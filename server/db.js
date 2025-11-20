@@ -1,31 +1,1 @@
-const sql = require('mssql');
-const config = {
-  user: process.env.DB_USER || 'Inven',
-  password: process.env.DB_PASSWORD || '123',
-  server: process.env.DB_SERVER || 'LAPTOP-OOKDLLNS',
-  database: process.env.DB_NAME || 'INVENTORY_SYSTEM_DB',
-  options: {
-    encrypt: false,
-    trustServerCertificate: true
-  },
-  pool: {
-    max: 10,
-    min: 0,
-    idleTimeoutMillis: 30000
-  }
-};
-
-const poolPromise = new sql.ConnectionPool(config)
-  .connect()
-  .then(pool => {
-    console.log('Connected to SQL Server');
-    return pool;
-  })
-  .catch(err => {
-    console.error('Database Connection Failed!', err);
-    throw err;
-  });
-
-module.exports = {
-  sql, poolPromise
-};
+const sql = require('mssql');const config = {  user: process.env.DB_USER || 'Inven',  password: process.env.DB_PASSWORD || '123',  server: process.env.DB_SERVER || 'localhost',  database: process.env.DB_NAME || 'INVENTORY_SYSTEM_DB',  port: process.env.DB_PORT ? parseInt(process.env.DB_PORT) : 1433,  options: {    encrypt: false,    trustServerCertificate: true,    enableArithAbort: true  },  connectionTimeout: process.env.DB_CONN_TIMEOUT ? parseInt(process.env.DB_CONN_TIMEOUT) : 15000,  requestTimeout: process.env.DB_REQ_TIMEOUT ? parseInt(process.env.DB_REQ_TIMEOUT) : 30000,  pool: {    max: 10,    min: 0,    idleTimeoutMillis: 30000  }};let poolPromise = null;let retryDelay = 2000; async function createPoolWithRetry() {  if (poolPromise) return poolPromise;  poolPromise = (async () => {    while (true) {      try {        const pool = await new sql.ConnectionPool(config).connect();        pool.on('error', (err) => {          console.error('SQL Pool error:', err && err.message ? err.message : err);        });        console.log('Connected to SQL Server');        retryDelay = 2000;        return pool;      } catch (err) {        console.error('Database connection failed:', err && err.message ? err.message : err);        poolPromise = null;        await new Promise(r => setTimeout(r, retryDelay));        retryDelay = Math.min(60000, Math.floor(retryDelay * 1.5));        console.log(`Retrying database connection in ${retryDelay}ms...`);      }    }  })();  return poolPromise;}module.exports = {  sql,  poolPromise: createPoolWithRetry()};

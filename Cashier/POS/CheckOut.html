@@ -1,151 +1,1 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>POS Order Summary</title>
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="CheckOut.css">
-</head>
-<body>
-  <div class="container">
-    
-    <div class="sidebar">
-      <div class="menu-item menu-create-order">
-        <span class="material-icons">edit_document</span>
-        <span>Create Order</span>
-      </div>
-      <div class="menu-item menu-orders">
-        <span class="material-icons">receipt_long</span>
-        <span>Orders</span>
-      </div>
-      <div class="menu-item menu-settings">
-        <span class="material-icons">settings</span>
-        <span>Settings</span>
-      </div>
-      <div class="menu-item menu-logout">
-        <span class="material-icons">logout</span>
-        <span>Logout</span>
-      </div>
-    </div>
-
-    
-    <div class="main-box"></div>
-    <div class="side-box"></div>
-
-    
-    <span class="title">Order Summary</span>
-  <button id="backBtn" class="back-button">Back</button>
-
-    
-    <div class="section-box product-subtotal">
-      <div class="section-header">
-        <span class="bullet">• </span>
-        <span class="title-text">Product Subtotal</span>
-      </div>
-      <div class="section-content">
-        <div class="row">
-          <span>Original Price :</span>
-          <span></span>
-        </div>
-        <div class="row" style="margin-bottom: 0;">
-          <span>Bulk Price :</span>
-          <span></span>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="section-box shipping-subtotal">
-      <div class="section-header">
-        <span class="bullet">• </span>
-        <span class="title-text">Shipping Subtotal</span>
-      </div>
-      <div class="section-content">
-        <div class="row">
-          <span>Shipping fee :</span>
-          <span></span>
-        </div>
-        <div class="row" style="margin-bottom: 0;">
-          <span>Shipping discount :</span>
-          <span></span>
-        </div>
-      </div>
-    </div>
-
-    
-    <div class="section-box total-section">
-      <span class="bullet">• </span>
-      <span class="title-text" style="margin-left: 5px;">Total :</span>
-    </div>
-
-    
-    <div class="section-box delivery-options">
-      <div class="section-header">
-        <span class="bullet">• </span>
-        <span class="title-text">Delivery Option</span>
-      </div>
-      <div class="checkbox-group">
-        <label class="checkbox-label"><input type="radio" name="delivery" value="walkin" id="deliveryWalkin"> Walk-in</label>
-        <label class="checkbox-label"><input type="radio" name="delivery" value="delivery" id="deliveryDelivery"> Delivery</label>
-      </div>
-    </div>
-
-    
-    <div class="section-box address-section">
-      <div class="section-header" style="margin-bottom: 8px;">
-        <span class="bullet">• </span>
-        <span class="title-text">Address</span>
-      </div>
-      <div class="input-row">
-        <span>Address :</span>
-        <input type="text" placeholder="Enter address" id="checkoutAddress">
-      </div>
-    </div>
-
-    
-    <div class="section-box contact-section">
-      <div class="section-header" style="margin-bottom: 8px;">
-        <span class="bullet">• </span>
-        <span class="title-text">Contact</span>
-      </div>
-      <div class="input-row">
-        <span>Contact Number :</span>
-        <input type="text" placeholder="Enter contact number" id="checkoutContact">
-      </div>
-    </div>
-
-    
-    <div class="section-box product-info">
-      <div class="section-header">
-        <span class="bullet">• </span>
-        <span class="title-text">Product</span>
-      </div>
-      <div class="section-content" id="checkoutProductList">
-        <!-- product rows will be injected here -->
-      </div>
-    </div>
-
-    
-    <div class="section-box payment-method">
-      <div class="section-header">
-        <span class="bullet">• </span>
-        <span class="title-text">Payment Method</span>
-      </div>
-      <div class="checkbox-group">
-        <label class="checkbox-label"><input type="radio" name="payment" value="cash" id="payCash"> Cash</label>
-        <label class="checkbox-label"><input type="radio" name="payment" value="gcash" id="payGcash"> Gcash e-Wallet</label>
-        <label class="checkbox-label"><input type="radio" name="payment" value="card" id="payCard"> Credit/Debit</label>
-      </div>
-    </div>
-
-    
-    <div class="checkout-button">
-      <span>Checkout</span>
-    </div>
-  </div>
-
-  <script src="CheckOut.js"></script>
-</body>
-</html>
+<!DOCTYPE html><html lang="en"><head>  <meta charset="UTF-8">  <meta name="viewport" content="width=device-width, initial-scale=1.0">  <title>POS Order Summary</title>  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">  <link rel="stylesheet" href="CheckOut.css">  <link rel="stylesheet" href="../../Menubar/dark-theme.css"></head><body>  <div class="container">    <div class="sidebar">      <div class="nav-item menu-create-order" data-target="CreateOrder.html">        <span class="material-icons">edit_document</span>        <span>Create Order</span>      </div>      <div class="nav-item menu-orders" data-target="CashierOrders.html">        <span class="material-icons">receipt_long</span>        <span>Orders</span>      </div>      <div class="nav-item menu-settings" data-target="CashierSettings.html">        <span class="material-icons">settings</span>        <span>Settings</span>      </div>      <div class="nav-item menu-logout" data-target="../../Login/index.html">        <span class="material-icons">logout</span>        <span>Logout</span>      </div>    </div>    <div class="main-box"></div>    <div class="side-box"></div>    <span class="title">Order Summary</span>  <button id="backBtn" class="back-button">Back</button>    <div class="section-box product-subtotal">      <div class="section-header">        <span class="bullet">• </span>        <span class="title-text">Product Subtotal</span>      </div>      <div class="section-content">        <div class="row">          <span>Original Price :</span>          <span></span>        </div>        <div class="row" style="margin-bottom: 0;">          <span>Bulk Price :</span>          <span></span>        </div>      </div>    </div>    <div class="section-box shipping-subtotal">      <div class="section-header">        <span class="bullet">• </span>        <span class="title-text">Shipping Subtotal</span>      </div>      <div class="section-content">        <div class="row">          <span>Shipping fee :</span>          <span></span>        </div>        <div class="row" style="margin-bottom: 0;">          <span>Shipping discount :</span>          <span></span>        </div>      </div>    </div>    <div class="section-box total-section">      <span class="bullet">• </span>      <span class="title-text" style="margin-left: 5px;">Total :</span>    </div>    <div class="section-box delivery-options">      <div class="section-header">        <span class="bullet">• </span>        <span class="title-text">Delivery Option</span>      </div>      <div class="checkbox-group">        <label class="checkbox-label"><input type="radio" name="delivery" value="walkin" id="deliveryWalkin"> Walk-in</label>        <label class="checkbox-label"><input type="radio" name="delivery" value="delivery" id="deliveryDelivery"> Delivery</label>      </div>    </div>    <div class="section-box address-section">      <div class="section-header" style="margin-bottom: 8px;">        <span class="bullet">• </span>        <span class="title-text">Address</span>      </div>      <div class="input-row">        <span>Address :</span>        <input type="text" placeholder="Enter address" id="checkoutAddress">      </div>    </div>    <div class="section-box contact-section">      <div class="section-header" style="margin-bottom: 8px;">        <span class="bullet">• </span>        <span class="title-text">Contact</span>      </div>      <div class="input-row">        <span>Contact Number :</span>        <input type="text" placeholder="Enter contact number" id="checkoutContact">      </div>    </div>    <div class="section-box product-info">      <div class="section-header">        <span class="bullet">• </span>        <span class="title-text">Product</span>      </div>      <div class="section-content" id="checkoutProductList">      </div>    </div>    <div class="section-box payment-method">      <div class="section-header">        <span class="bullet">• </span>        <span class="title-text">Payment Method</span>      </div>      <div class="checkbox-group">        <label class="checkbox-label"><input type="radio" name="payment" value="cash" id="payCash"> Cash</label>        <label class="checkbox-label"><input type="radio" name="payment" value="gcash" id="payGcash"> Gcash e-Wallet</label>        <label class="checkbox-label"><input type="radio" name="payment" value="card" id="payCard"> Credit/Debit</label>      </div>    </div>    <div class="checkout-button">      <span>Checkout</span>    </div>  </div>  <script src="CheckOut.js"></script>  <script src="../../darkMode.js"></script></body></html>

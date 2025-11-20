@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="utf-8" />
+  <title>Elisha Bay - Profile</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+  <link rel="stylesheet" href="Profile.css" />
+  <link rel="stylesheet" href="../../Menubar/dark-theme.css" />
+</head>
+<body>
+  <div class="frame">
+    <header class="header" id="header">
+      <a href="#home" class="logo">Elisha Bay</a>
+      <nav>
+        <ul class="nav-list">
+          <li class="nav-item">
+            <a href="#home" class="nav-link">
+              <span class="material-symbols-outlined">home</span>
+              <span>Home</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#menu" class="nav-link">
+              <span class="material-symbols-outlined">restaurant_menu</span>
+              <span>Menu</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#about" class="nav-link">
+              <span class="material-symbols-outlined">info</span>
+              <span>About Us</span>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a href="#contact" class="nav-link">
+              <span class="material-symbols-outlined">call</span>
+              <span>Contact Us</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+      <div class="auth-container">
+        <a href="#cart" class="cart-link">
+          <span class="material-symbols-outlined">shopping_cart</span>
+        </a>
+        <a href="#profile" class="profile-link">
+          <span class="material-symbols-outlined">person</span>
+        </a>
+      </div>
+    </header>
+    <main>
+      <h1 class="page-title">Profile</h1>
+      <div class="profile-container">
+        <aside class="profile-sidebar">
+          <div class="profile-info">
+            <div class="profile-avatar"></div>
+            <h3 class="profile-name">Username</h3>
+            <p class="profile-email">emailaddress@example.com</p>
+          </div>
+          <nav class="profile-nav">
+            <a href="#orders" class="profile-nav-item active">Orders</a>
+            <a href="#settings" class="profile-nav-item">Settings</a>
+            <button class="logout-btn">Log Out</button>
+          </nav>
+        </aside>
+        <section class="orders-section">
+          <h2 class="orders-title">My Orders</h2>
+          <article class="order-card">
+            <div class="order-image"></div>
+            <div class="order-details">
+              <h4 class="order-number">Order #123456</h4>
+              <p class="order-date">Date: 11/15/2025</p>
+              <p class="order-total">Order <span class="highlight">Total</span>: ₱1,500.00</p>
+            </div>
+            <button class="view-btn">View</button>
+          </article>
+          <article class="order-card">
+            <div class="order-image"></div>
+            <div class="order-details">
+              <h4 class="order-number">Order #123457</h4>
+              <p class="order-date">Date: 11/10/2025</p>
+              <p class="order-total">Order <span class="highlight">Total</span>: ₱2,250.00</p>
+            </div>
+            <button class="view-btn">View</button>
+          </article>
+          <article class="order-card">
+            <div class="order-image"></div>
+            <div class="order-details">
+              <h4 class="order-number">Order #123458</h4>
+              <p class="order-date">Date: 11/05/2025</p>
+              <p class="order-total">Order <span class="highlight">Total</span>: ₱1,850.00</p>
+            </div>
+            <button class="view-btn">View</button>
+          </article>
+        </section>
+      </div>
+    </main>
+    <footer class="footer">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h2>Elisha Bay</h2>
+          <p>Seas the bay with Elisha Bay</p>
+        </div>
+        <nav class="footer-nav footer-section">
+          <h3>Quick Links</h3>
+          <ul>
+            <li><a href="#home">Home</a></li>
+            <li><a href="#menu">Menu</a></li>
+            <li><a href="#about">About Us</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+        <div class="footer-contact footer-section">
+          <h3>Contact</h3>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">call</span> 
+            <a href="tel:09192701448">0919 270 1448</a>
+          </p>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">email</span> 
+            <a href="mailto:raiisagv@yahoo.com.ph">raiisagv@yahoo.com.ph</a>
+          </p>
+          <p>
+            <span class="material-symbols-outlined" style="vertical-align: middle; font-size: 18px;">location_on</span> 
+            148 BRGY.MANGIN, Dagupan City, 2400 Pangasinan
+          </p>
+        </div>
+        <div class="footer-social footer-section">
+          <h3>Follow Us</h3>
+          <a href="#facebook" class="social-link">
+            <span class="material-symbols-outlined" style="font-size: 20px;">share</span>
+            Facebook
+          </a>
+        </div>
+      </div>
+      <p class="copyright">© 2025 Elisha Bay. All rights reserved.</p>
+    </footer>
+  </div>
+  <script src="../../darkMode.js"></script>
+  <script src="../nav.js"></script>
+  <script src="Profile.js"></script>
+</body>
+</html>
