@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
 * {
     font-family: 'Poppins', sans-serif;
@@ -19,8 +19,8 @@ body {
 
 .container {
     position: relative;
-    width: 850px;
-    height: 550px;
+    width: 950px;
+    height: 720px;
     background: #fff;
     margin: 20px;
     border-radius: 30px;
@@ -29,12 +29,12 @@ body {
 }
 
 .container h1 {
-    font-size: 36px;
-    margin: -10px 0;
+    font-size: 26px;
+    margin: 0 0 15px;
 }
 
 .container p {
-    font-size: 14.5px;
+    font-size: 14px;
     margin: 15px 0;
 }
 
@@ -52,7 +52,7 @@ form {
     align-items: center;
     color: #9c4e4e;
     text-align: center;
-    padding: 40px;
+    padding: 25px;
     z-index: 1;
     transition: right 0.6s ease-in-out 1.2s, visibility 0s linear 1s;
 }
@@ -89,57 +89,71 @@ form {
 .input-box {
     position: relative;
     width: 100%;
-    margin: 30px 0;
+    margin: 12px 0;
     border-bottom: 2px solid #9c4e4e;
 }
 
-.input-box input {
+.input-row {
+    display: flex;
+    gap: 10px;
     width: 100%;
-    padding: 13px 50px 13px 20px;
-    font-size: 16px;
+}
+
+.input-row .input-box {
+    flex: 1;
+    margin: 8px 0;
+}
+
+.input-box input, .input-box textarea {
+    width: 100%;
+    padding: 9px 35px 9px 12px;
+    font-size: 13px;
     background: #eee;
-    border-radius: 8px;
+    border-radius: 6px;
     outline: none;
     border: none;
     color: #333;
     font-weight: 500;
 }
 
-.input-box input::placeholder {
+.input-box textarea {
+    resize: none;
+    height: 50px;
+    padding-right: 12px;
+}
+
+.input-box input::placeholder, .input-box textarea::placeholder {
     color: #888;
     font-weight: 400;
 }
 
-.input-box i {
+.input-box .material-symbols-outlined {
     position: absolute;
-    right: 20px;
+    right: 10px;
     top: 50%;
     transform: translateY(-50%);
     color: #adadad;
     font-size: 20px;
 }
 
-.forgot-link {
-    margin: -15px 0 15px;
-}
-
-.forgot-link a {
-    font-size: 14.5px;
-    color: #9c4e4e;
+.input-box.textarea-box .material-symbols-outlined {
+    top: 16px;
+    transform: none;
 }
 
 .btn {
     width: 100%;
-    height: 48px;
+    height: 42px;
     background: #9c4e4e;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border: none;
     outline: none;
     cursor: pointer;
-    font-size: 16px;
+    font-size: 14px;
     color: #ffffff;
     font-weight: 600;
+    margin-top: 8px;
 }
 
 .toggle-box {
@@ -213,4 +227,38 @@ form {
     background: transparent;
     border: 2px solid #ffffff;
     box-shadow: none;
+}
+
+.message {
+    margin-top: 8px;
+    padding: 6px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.message.success {
+    background: #d4edda;
+    color: #155724;
+}
+
+.message.error {
+    background: #f8d7da;
+    color: #721c24;
+}
+
+.age-note {
+    font-size: 10px;
+    color: #888;
+    margin: -3px 0 5px;
+    text-align: left;
+}
+
+.form-box.login form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-box.login .input-box {
+    margin: 20px 0;
 }

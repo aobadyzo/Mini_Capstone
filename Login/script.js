@@ -1,122 +1,122 @@
-
 const container = document.querySelector('.container');
-console.log('Login script loaded');
 const registerBtn = document.querySelector('.register-btn');
-const loginBtn = document.querySelector('.login-btn');
-
+const loginBtn = document.querySelector('.login-btn');
 
 registerBtn.addEventListener('click', () => {
-        document.querySelector('.container').classList.add('active');
+    container.classList.add('active');
 });
 
 loginBtn.addEventListener('click', () => {
-         document.querySelector('.container').classList.remove('active');
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const loginForm = document.querySelector('.form-box.login form');
-    if (!loginForm) return;
-    loginForm.addEventListener('submit', async (ev) => {
-        ev.preventDefault();
-        const username = loginForm.querySelectorAll('input')[0].value.trim();
-        const password = loginForm.querySelectorAll('input')[1].value.trim();
-        const localUsers = [
-            { UserId: 1, Username: 'admin', Email: 'admin@example.local', PasswordHash: 'admin123', FullName: 'Administrator', Role: 'admin', CreatedAt: new Date().toISOString() },
-            { UserId: 2, Username: 'cashier', Email: 'cashier@example.local', PasswordHash: 'cashier123', FullName: 'Cashier User', Role: 'cashier', CreatedAt: new Date().toISOString() }
-        ];
-        const performLoginCheck = (jsonData) => {
-            try {
-                console.log('API rows count:', jsonData && jsonData.rows ? jsonData.rows.length : 'no rows');
-                if (jsonData && jsonData.ok && Array.isArray(jsonData.rows)) {
-                    console.log('Searching users for', username);
-                    const user = jsonData.rows.find(u => (u.Username && u.Username.toLowerCase() === username.toLowerCase()) || (u.Email && u.Email.toLowerCase() === username.toLowerCase()));
-                    console.log('Found user object:', user);
-                    if (user) {
-                        const storedHash = (user.PasswordHash || '').toString().trim();
-                        console.log('Comparing entered password (len)', password.length, 'to stored PasswordHash (trimmed):', storedHash ? `(len ${storedHash.length})` : '(empty)');
-                        if (password === storedHash) {
-                            try { localStorage.setItem('currentUser', JSON.stringify(user)); } catch (e) { console.warn('Could not persist currentUser', e); }
+    container.classList.remove('active');
+});
 
-                            const baseUrl = `${location.protocol}//${location.hostname}${location.port ? (':' + location.port) : ''}`;
-                            console.log('Redirecting user:', user.Role);
-                            try {
-                                const auditHost = successfulHost || 'http://localhost:3001';
-                                if (auditHost !== 'localFallback') {
-                                    fetch(auditHost.replace(/\/$/, '') + '/api/audit', {
-                                        method: 'POST', headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify({ performedBy: user.UserId || null, actionType: 'Login', details: `User ${user.Username || user.Email} logged in` })
-                                    }).catch(e => {});
-                                }
-                            } catch(e) {  }
-                            try {
-                                if ((user.Role || '').toLowerCase() === 'cashier') {
-                                    window.location.href = `${baseUrl}/Cashier/pos.html`;
-                                } else {
-                                    window.location.href = `${baseUrl}/Menubar/Inventory.html`;
-                                }
-                            } catch (redirErr) { console.error('Redirection failed', redirErr); }
-                            return true;
-                        } else {
-                            console.log('Password mismatch for user', user.Username);
-                        }
-                    } else {
-                        console.log('User not found in rows');
-                    }
-                } else {
-                    console.log('No valid JSON rows to search');
-                }
-            } catch (err) {
-                console.warn('performLoginCheck error', err);
-            }
-            return false;
+// Local users for demo
+const localUsers = [
+    { UserId: 1, Username: 'admin', Email: 'admin@example.local', PasswordHash: 'admin123', FullName: 'Administrator', Role: 'admin', CreatedAt: new Date().toISOString() },
+    { UserId: 2, Username: 'cashier', Email: 'cashier@example.local', PasswordHash: 'cashier123', FullName: 'Cashier User', Role: 'cashier', CreatedAt: new Date().toISOString() }
+];
+
+// Calculate age from birthdate
+function calculateAge(birthDate) {
+    const today = new Date();
+    const birth = new Date(birthDate);
+    let age = today.getFullYear() - birth.getFullYear();
+    const monthDiff = today.getMonth() - birth.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+    }
+    return age;
+}
+
+// Set max date for birthdate (must be 18+)
+const birthDateInput = document.getElementById('regBirthDate');
+const today = new Date();
+const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+birthDateInput.max = maxDate.toISOString().split('T')[0];
+
+// Login form handler
+const loginForm = document.getElementById('loginForm');
+const loginMessage = document.getElementById('loginMessage');
+
+loginForm.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    const inputs = loginForm.querySelectorAll('input');
+    const username = inputs[0].value.trim();
+    const password = inputs[1].value.trim();
+
+    const user = localUsers.find(u => 
+        (u.Username && u.Username.toLowerCase() === username.toLowerCase()) || 
+        (u.Email && u.Email.toLowerCase() === username.toLowerCase())
+    );
+
+    if (user && password === user.PasswordHash) {
+        loginMessage.className = 'message success';
+        loginMessage.textContent = `Welcome back, ${user.FullName}! Role: ${user.Role}`;
+    } else {
+        loginMessage.className = 'message error';
+        loginMessage.textContent = 'Invalid credentials or user not found';
+    }
+});
+
+// Register form handler
+const registerForm = document.getElementById('registerForm');
+const registerMessage = document.getElementById('registerMessage');
+
+registerForm.addEventListener('submit', (ev) => {
+    ev.preventDefault();
+    
+    const username = document.getElementById('regUsername').value.trim();
+    const firstName = document.getElementById('regFirstName').value.trim();
+    const lastName = document.getElementById('regLastName').value.trim();
+    const email = document.getElementById('regEmail').value.trim();
+    const password = document.getElementById('regPassword').value;
+    const confirmPassword = document.getElementById('regConfirmPassword').value;
+    const contact = document.getElementById('regContact').value.trim();
+    const birthDate = document.getElementById('regBirthDate').value;
+    const address = document.getElementById('regAddress').value.trim();
+
+    // Validate age (18+)
+    const age = calculateAge(birthDate);
+    if (age < 18) {
+        registerMessage.className = 'message error';
+        registerMessage.textContent = 'You must be 18 years or older to register';
+        return;
+    }
+
+    // Validate password match
+    if (password !== confirmPassword) {
+        registerMessage.className = 'message error';
+        registerMessage.textContent = 'Passwords do not match';
+        return;
+    }
+
+    // Check if user exists
+    const exists = localUsers.find(u => 
+        u.Username.toLowerCase() === username.toLowerCase() || 
+        u.Email.toLowerCase() === email.toLowerCase()
+    );
+
+    if (exists) {
+        registerMessage.className = 'message error';
+        registerMessage.textContent = 'Username or email already exists';
+    } else {
+        const newUser = {
+            UserId: localUsers.length + 1,
+            Username: username,
+            FirstName: firstName,
+            LastName: lastName,
+            Email: email,
+            PasswordHash: password,
+            FullName: `${firstName} ${lastName}`,
+            Contact: contact,
+            BirthDate: birthDate,
+            Address: address,
+            Role: 'user',
+            CreatedAt: new Date().toISOString()
         };
-
-    try {
-            const apiCandidates = [
-                `${location.protocol}//${location.hostname}:3001`,
-                'http://localhost:3001',
-                `${location.protocol}//${location.hostname}${location.port ? (':' + location.port) : ''}`
-            ];
-            const fetchWithTimeout = (url, opts = {}, ms = 3000) => {
-                const controller = new AbortController();
-                const id = setTimeout(() => controller.abort(), ms);
-                return fetch(url, { ...opts, signal: controller.signal }).finally(() => clearTimeout(id));
-            };
-
-            let json = null;
-            let successfulHost = null;
-            for (const host of apiCandidates) {
-                const url = host.replace(/\/+$/, '') + '/api/users';
-                console.log('Trying API host', url);
-                try {
-                    const res = await fetchWithTimeout(url);
-                    if (!res.ok) {
-                        console.log('Host responded but status not OK', res.status, url);
-                        continue;
-                    }
-                    json = await res.json();
-                    console.log('Got JSON from', url, json);
-                    if (json && json.ok) {
-                        successfulHost = url;
-                        break;
-                    }
-                } catch (e) {
-                    console.log('Fetch failed for', url, e && e.name ? e.name : e);
-                }
-            }
-            console.log('API finished, selected host:', successfulHost);
-            if (!json) {
-                console.log('No API response, using local fallback users for testing');
-                json = { ok: true, rows: localUsers };
-                successfulHost = 'localFallback';
-            }
-            if (performLoginCheck(json)) return;
-            alert('Invalid credentials or user not found');
-        } catch (e) {
-            console.warn('Login API error', e);
-            json = { ok: true, rows: localUsers };
-            console.log('Using local fallback users due to API error');
-            if (performLoginCheck(json)) return;
-            alert('Invalid credentials or user not found');
-        }
-    });
+        localUsers.push(newUser);
+        registerMessage.className = 'message success';
+        registerMessage.textContent = 'Registration successful! You can now login.';
+        registerForm.reset();
+    }
 });

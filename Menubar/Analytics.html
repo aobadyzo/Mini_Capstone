@@ -5,14 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Analytics Dashboard</title>
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css">
-  <link rel="stylesheet" href="../test.css">
-  <link rel="stylesheet" href="Analytics.css">
-  <link rel="stylesheet" href="dark-theme.css">
+  <link rel="stylesheet" href="analytics.css">
 </head>
 <body>
   <div class="container">
-    
+    <!-- Sidebar -->
     <nav class="sidebar">
       <div class="logo">
         <div class="logo-icon">
@@ -20,172 +17,173 @@
         </div>
         <span>Analytics</span>
       </div>
-      
-      <a href="#" class="menu-item">
-        <div class="icon-wrapper">
-          <span class="material-icons">dashboard</span>
-        </div>
+
+      <a href="#" class="menu-item menu-hover" data-page="Dashboard">
+        <span class="material-icons icon-hover">dashboard</span>
         <span>Dashboard</span>
       </a>
-      
-      <a href="#" class="menu-item">
-        <div class="icon-wrapper">
-          <span class="material-icons">person</span>
-        </div>
+      <a href="#" class="menu-item menu-hover" data-page="User">
+        <span class="material-icons icon-hover">person</span>
         <span>User</span>
       </a>
-      
-      <a href="#" class="menu-item">
-        <div class="icon-wrapper">
-          <span class="material-icons">shopping_cart</span>
-        </div>
+      <a href="#" class="menu-item menu-hover" data-page="Orders">
+        <span class="material-icons icon-hover">shopping_cart</span>
         <span>Orders</span>
       </a>
-      
-      <a href="#" class="menu-item active">
-        <div class="icon-wrapper">
-          <span class="material-icons">analytics</span>
-        </div>
+      <a href="#" class="menu-item menu-hover active" data-page="Analytics">
+        <span class="material-icons icon-hover">analytics</span>
         <span>Analytics</span>
       </a>
-      
-      <a href="#" class="menu-item">
-        <div class="icon-wrapper">
-          <span class="material-icons">inventory_2</span>
-        </div>
+      <a href="#" class="menu-item menu-hover" data-page="Inventory">
+        <span class="material-icons icon-hover">inventory_2</span>
         <span>Inventory</span>
       </a>
-      
-      <a href="#" class="menu-item">
-        <div class="icon-wrapper">
-          <span class="material-icons">history</span>
-        </div>
+      <a href="#" class="menu-item menu-hover" data-page="History">
+        <span class="material-icons icon-hover">history</span>
         <span>History</span>
       </a>
-      
+
       <div class="menu-divider"></div>
-      
-      <a href="#" class="menu-item">
-        <div class="icon-wrapper">
-          <span class="material-icons">settings</span>
-        </div>
+
+      <a href="#" class="menu-item menu-hover" data-page="Settings">
+        <span class="material-icons icon-hover">settings</span>
         <span>Settings</span>
       </a>
-      
-      <a href="#" class="menu-item logout">
-        <div class="icon-wrapper">
-          <span class="material-icons">logout</span>
-        </div>
+      <a href="#" class="menu-item menu-hover" data-page="Logout">
+        <span class="material-icons icon-hover">logout</span>
         <span>Logout</span>
       </a>
-      
-      <div class="menu-spacer"></div>
     </nav>
-    
-    
+
+    <!-- Main Content -->
     <main class="main-content">
       <div class="content-header">
-        <span class="material-icons">analytics</span>
-        <h1>Analytics</h1>
+        <div class="header-left">
+          <span class="material-icons">analytics</span>
+          <h1>Analytics</h1>
+        </div>
+        
+        <!-- Date Range Picker -->
+        <div class="date-range-picker glow-hover">
+          <span class="material-icons">calendar_today</span>
+          <input type="date" id="date-from" value="2025-01-01">
+          <span class="date-separator">to</span>
+          <input type="date" id="date-to" value="2025-01-31">
+        </div>
       </div>
-      
+
       <div class="content-box">
-        
-        <div class="chart-container">
-          <div class="chart-wrapper">
-            <div class="chart-area">
-              <div class="y-axis">
-                <span>100</span>
-                <span>80</span>
-                <span>60</span>
-                <span>40</span>
-                <span>20</span>
-                <span>0</span>
+        <!-- Date Range Display -->
+        <div class="date-display">
+          <span>Showing data from </span>
+          <span class="date-highlight" id="display-from">01/01/25</span>
+          <span> to </span>
+          <span class="date-highlight" id="display-to">01/31/25</span>
+        </div>
+
+        <!-- Top Stats Cards -->
+        <div class="stats-row">
+          <!-- Customers Card -->
+          <div class="stat-card card-hover">
+            <div class="stat-header">
+              <div class="stat-icon customers-icon icon-hover">
+                <span class="material-icons">people</span>
               </div>
-              <div class="chart-grid">
-                <svg class="line-chart" viewBox="0 0 600 240" preserveAspectRatio="none">
-                  
-                  <path class="chart-path" d="M 0,90 L 50,50 L 100,120 L 150,105 L 200,80 L 250,70 L 300,60 L 350,20 L 400,30 L 450,75 L 500,120 L 550,110 L 600,100" />
-                  
-                  
-                  <circle class="chart-dot" cx="0" cy="90" r="4" />
-                  <circle class="chart-dot" cx="50" cy="50" r="4" />
-                  <circle class="chart-dot" cx="100" cy="120" r="4" />
-                  <circle class="chart-dot" cx="150" cy="105" r="4" />
-                  <circle class="chart-dot" cx="200" cy="80" r="4" />
-                  <circle class="chart-dot" cx="250" cy="70" r="4" />
-                  <circle class="chart-dot" cx="300" cy="60" r="4" />
-                  <circle class="chart-dot" cx="350" cy="20" r="4" />
-                  <circle class="chart-dot" cx="400" cy="30" r="4" />
-                  <circle class="chart-dot" cx="450" cy="75" r="4" />
-                  <circle class="chart-dot" cx="500" cy="120" r="4" />
-                  <circle class="chart-dot" cx="550" cy="110" r="4" />
-                  <circle class="chart-dot" cx="600" cy="100" r="4" />
-                </svg>
+              <span class="stat-label">Number of Customers</span>
+            </div>
+            <div class="stat-value" id="customers-count">1,247</div>
+            <div class="stat-trend positive">
+              <span class="material-icons">trending_up</span>
+              +12.5% from previous period
+            </div>
+          </div>
+
+          <!-- Sales Card -->
+          <div class="stat-card card-hover">
+            <div class="stat-header">
+              <div class="stat-icon sales-icon icon-hover">
+                <span class="material-icons">payments</span>
+              </div>
+              <span class="stat-label">Total Sales</span>
+            </div>
+            <div class="stat-value" id="sales-total">₱89,450.75</div>
+            <div class="stat-trend positive">
+              <span class="material-icons">trending_up</span>
+              +8.3% from previous period
+            </div>
+          </div>
+        </div>
+
+        <!-- Sales Bar Graph -->
+        <div class="chart-card card-hover">
+          <div class="chart-header">
+            <div class="chart-title">
+              <div class="chart-icon icon-hover">
+                <span class="material-icons">bar_chart</span>
+              </div>
+              <span>Sales Overview</span>
+            </div>
+            <div class="chart-legend">
+              <div class="legend-item">
+                <div class="legend-color current"></div>
+                <span>Current Period</span>
+              </div>
+              <div class="legend-item">
+                <div class="legend-color previous"></div>
+                <span>Previous Period</span>
               </div>
             </div>
           </div>
-          <div class="x-axis">
-            <span>Jan</span>
-            <span>Feb</span>
-            <span>Mar</span>
-            <span>Apr</span>
-            <span>May</span>
-            <span>June</span>
-            <span>July</span>
-            <span>Aug</span>
-            <span>Sep</span>
-            <span>Oct</span>
-            <span>Nov</span>
-            <span>Dec</span>
+          <div class="bar-chart" id="bar-chart">
+            <!-- Bars will be generated by JavaScript -->
           </div>
-          <div class="legend">
-            <div class="legend-line">
-              <div class="legend-dot"></div>
+        </div>
+
+        <!-- Best Sellers -->
+        <div class="list-card card-hover">
+          <div class="list-header">
+            <div class="list-icon bestseller-icon icon-hover">
+              <span class="material-icons">star</span>
             </div>
-            <span>2025</span>
+            <span>Best Sellers</span>
+          </div>
+          <div class="list-items" id="best-sellers">
+            <!-- Items will be generated by JavaScript -->
           </div>
         </div>
-        
-        <div class="divider"></div>
-        
-        
-        <div class="stats-grid">
-          <div class="stat-card">Today's sales</div>
-          <div class="stat-card">This week's sales</div>
-          <div class="stat-card">This month's sales</div>
-          <div class="stat-card">This year's sales</div>
+
+        <!-- Fast Moving / Slow Moving -->
+        <div class="moving-row">
+          <!-- Fast Moving -->
+          <div class="list-card card-hover">
+            <div class="list-header">
+              <div class="list-icon fast-icon icon-hover">
+                <span class="material-icons">speed</span>
+              </div>
+              <span>Fast Moving</span>
+            </div>
+            <div class="list-items" id="fast-moving">
+              <!-- Items will be generated by JavaScript -->
+            </div>
+          </div>
+
+          <!-- Slow Moving -->
+          <div class="list-card card-hover">
+            <div class="list-header">
+              <div class="list-icon slow-icon icon-hover">
+                <span class="material-icons">trending_down</span>
+              </div>
+              <span>Slow Moving</span>
+            </div>
+            <div class="list-items" id="slow-moving">
+              <!-- Items will be generated by JavaScript -->
+            </div>
+          </div>
         </div>
-        
-        <div class="stats-grid">
-          <div class="stat-card">Yesterday's sales</div>
-          <div class="stat-card">Last week's sales</div>
-          <div class="stat-card">Last month's sale</div>
-          <div class="stat-card">Last year's sale</div>
-        </div>
-        
-        
-        <table class="data-table">
-          <thead>
-            <tr>
-              <th>Product ID</th>
-              <th>Name</th>
-              <th>Stock Level</th>
-              <th>      </th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td colspan="5" style="text-align: center; padding: 40px; color: #999;">No data available</td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </main>
   </div>
 
-  <script src="nav.js"></script>
-  <script src="theme.js"></script>
-  <script src="Analytics.js"></script>
+  <script src="analytics.js"></script>
 </body>
 </html>
